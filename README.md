@@ -6,3 +6,4 @@ An Adblock for Google Chrome developed as a senior CS capstone project for team 
 * Boris Pallares
 * Marco De Lucca
 * Nicholas Haghighi
+* Andres Rodriguez
