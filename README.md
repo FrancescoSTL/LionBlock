@@ -21,7 +21,6 @@ Download and install [Node.js](https://nodejs.org/en/download/)
 
 Once you've cloned the repo and installed Node.js, you can start LionBlock by running:
 
-# To bundle
 1. `npm install`
 2. `npm run bundle`
 
