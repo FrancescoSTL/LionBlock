@@ -11,15 +11,13 @@ An Adblock for Google Chrome developed as a senior CS capstone project for team 
 ### Installing  LionBlock
 
 Clone the repository by running:
-'''
+```
 git clone https://github.com/FrancescoSTL/LionBlock.git
-'''
-
+```
 Download and install browserify
-'''
+```
 npm install -g browserify
-'''
-
+```
 # To bundle
 1. 'npm install'
 2. 'npm run bundle'
