@@ -19,8 +19,8 @@ Download and install browserify
 npm install -g browserify
 ```
 # To bundle
-1. 'npm install'
-2. 'npm run bundle'
+1. `npm install`
+2. `npm run bundle`
 
 ## To debug in chrome
 
