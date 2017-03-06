@@ -34,9 +34,9 @@ Click on inspect views
 
 ## Backend
 
-    1. Main function that start the listen for HTTP headers
-    2. Function that parses disconnect JSON
-    3. Function isBlackListed
-    4. Function that parses URLs
+    1. Main function that start the listener for HTTP headers.
+    2. Function that parses disconnect JSON file.
+    3. Function isBlackListed.
+    4. Function that parses URLs.
 
 ## FrontEnd
