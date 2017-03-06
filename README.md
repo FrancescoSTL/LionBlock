@@ -30,13 +30,13 @@ Go to chrome://extensions/ and enable Developer mode.
 
 Click on inspect views
 
-### Todo
+## To debug
 
-## Backend
+# Backend
 
     1. Main function that start the listen for HTTP headers
     2. Function that parses disconnect JSON
     3. Function isBlackListed
     4. Function that parses URLs
 
-## FrontEnd
+# FrontEnd
