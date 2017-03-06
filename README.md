@@ -29,3 +29,13 @@ Once you've cloned the repo and installed Node.js, you can start LionBlock by ru
 Go to chrome://extensions/ and enable Developer mode.
 
 Click on inspect views
+
+## TODO
+
+  #Backend
+    - Main function that start the listen for HTTP headers
+    - Function that parses disconnect JSON
+    - Function isBlackListed
+    - Function that parses URLs
+    
+  #FrontEnd
