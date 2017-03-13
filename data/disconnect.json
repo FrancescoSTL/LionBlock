@@ -1,5 +1,4 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-module.exports={
+{
   "license": "Copyright 2010-2016 Disconnect, Inc. / This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. / This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. / You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.",
   "categories": {
     "Advertising": [
@@ -8631,56 +8630,3 @@ module.exports={
     ]
   }
 }
-},{}],2:[function(require,module,exports){
-var blocklistSet = new Set();
-const disconnectJSON = require('../data/disconnect.json');
-
-	// parse our disconnect JSON into a set where we only include the hostname and subdomain urls
-    for(var category in disconnectJSON.categories) {
-    	if(category == "Advertising") {
-	        for(var network in disconnectJSON.categories[category]) {
-	            for(var hostname in disconnectJSON.categories[category][network]) {
-	                blocklistSet.add(hostname);
-	                for(var subDomain in disconnectJSON.categories[category][network][hostname]) {
-	                    for(var entitySubDomain in disconnectJSON.categories[category][network][hostname][subDomain]) {
-	                        blocklistSet.add(disconnectJSON.categories[category][network][hostname][subDomain][entitySubDomain]);
-	                    }
-	                }
-	            }
-	        }
-        }
-    }
-
-chrome.webRequest.onBeforeSendHeaders.addListener(function(details) {
-    
-    var areWeCancelling;
-    if(isAd(details.url)) {
-    	areWeCancelling = true;
-    	console.log("bitch we be blockin " + parseURI(details.url).hostname);
-    }
-   
-
-    return {cancel: areWeCancelling};
-},{urls:["*://*/*"]}, ["blocking", "requestHeaders"]);
-
-function isAd(url) {
-	if(blocklistSet.has(parseURI(url).hostname)) {
-		return true;
-	}
-
-	return false;
-}
-
-function parseURI(url) {
-    var match = url.match(/^((https|http)?\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)(\/[^?#]*)(\?[^#]*|)(#.*|)$/);
-    return match && {
-        protocol: match[1],
-        host: match[2],
-        hostname: match[3],
-        port: match[4],
-        pathname: match[5],
-        search: match[6],
-        hash: match[7]
-    }
-}
-},{"../data/disconnect.json":1}]},{},[2]);
