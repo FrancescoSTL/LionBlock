@@ -5,7 +5,7 @@
   "description": "AdBusters first extension",
   "version": "1.0",
   "background": {
-    "scripts": ["js/blocker.js"]
+    "scripts": ["js/blocker.bundle.js"]
   },
   "browser_action": {
     "default_icon": "icon.png",
