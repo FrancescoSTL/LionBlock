@@ -5,9 +5,9 @@ const disconnectJSON = require('../data/disconnect.json');
 const disconnectEntitylist = require('../data/disconnectEntitylist.json');
 var {allHosts, canonicalizeHost} = require('../js/canonicalize.js');
 
+// NOTE: in isAd in SiteSonar HOST is the url in which all the ads are being loaded into and ORIGIN is the url from where the ad is being triggered. Example, the javascript file that generates the request.
 
-
-parseJason();
+parseJSON();
 //parseDisconnectEntity();
 
 chrome.webRequest.onBeforeSendHeaders.addListener(function(details) {
@@ -64,7 +64,7 @@ function parseURI(url) {
 }// end parse url
 
 
-function parseJason(){
+function parseJSON(){
 
 //delete disconnectJSON.categories['Content']
 //delete disconnectJSON.categories['Legacy Disconnect']
@@ -87,7 +87,7 @@ function parseJason(){
 	      }
     }
 
-}// end parse Jason
+}// end parse JSON
 
 /*
 function parseDisconnectEntity(){
