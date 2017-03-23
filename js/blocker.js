@@ -7,7 +7,7 @@ var {allHosts, canonicalizeHost} = require('../js/canonicalize.js');
 
 
 
-parseJason();
+parseJSON();
 //parseDisconnectEntity();
 
 chrome.webRequest.onBeforeSendHeaders.addListener(function(details) {
@@ -64,7 +64,7 @@ function parseURI(url) {
 }// end parse url
 
 
-function parseJason(){
+function parseJSON(){
 
 //delete disconnectJSON.categories['Content']
 //delete disconnectJSON.categories['Legacy Disconnect']
