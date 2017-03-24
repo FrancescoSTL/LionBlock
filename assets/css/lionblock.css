@@ -1,0 +1,91 @@
+
+body {
+  font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+  font-size: 100%;
+  width: 250px;
+  display:block;
+  overflow:auto;
+  background-color: white;
+  /* max-width: 400px;
+  max-height: 400px;*/
+}
+#status {
+  /* avoid an excessively wide status text */
+  white-space: pre;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+
+hr { 
+    display: block;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    margin-left: auto;
+    margin-right: auto;
+    border-style: inset;
+    border-width: 1px;
+}
+
+
+li {list-style-type: none;}
+
+.caret-right {
+
+    border-bottom: 4px solid transparent;
+
+}
+
+h1, h2, h3, h4, h5 , h6 {
+  color:  #090f0f;
+}
+
+.brand {
+  text-align: center;
+}
+
+.adBlocker {
+  text-align: center;
+  color: #bdbdbd;
+}
+
+h2 {
+  font-size: 18px;
+}
+
+.checkbox {
+  left: 50px;
+}
+
+
+.btn-group-vertical {
+  display: block;
+  margin: 10px;
+}
+
+.toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 20px; }
+  .toggle.ios .toggle-handle { border-radius: 20px; }
+
+.main-container {
+  height: 20%;
+}
+.option-container {
+  display:block;
+  overflow: hidden;
+  height:0px;
+
+    -webkit-transition: height 0.3s ease;
+     -moz-transition: height 0.3s ease;
+          transition: height 0.3s ease;
+  /*visibility: hidden;*/
+}
+
+.option-container.open { height: 250px;}
+
+#click-tag {
+  left: 120px;
+}
+
+.glyphicon {
+  font-size: 15px;
+}
