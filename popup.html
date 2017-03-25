@@ -27,46 +27,88 @@
 
 
   <body>
-      <div class="main-container center">
 
-        <!-- Plugin Tittle -->
-        <h1 class = "brand" >LionBlock</h1>
-        
-        <p class = "adBlocker">Ad Blocker for Lindenwood Univesity.</p>
+    <div id = "myCarousel" class = "carousel slide">
+      
+   
+   <!-- Carousel items -->
+   <div class = "carousel-inner">
+      <div class = "item active">
+        <div class="main-container center" alt = "First slide"">
 
 
-        <!-- Rounded switch -->
-        <div class="checkbox checkbox-slider-lg checkbox-slider--a">
+
+          <!-- Plugin Tittle -->
+          <h1 class = "brand" ><img src="assets/images/lionblock-logo.png" ></h1>
+          <p class = "adBlocker">Ad Blocker for Lindenwood University.</p>
+
+          <!-- Rounded switch -->
+          <div class="checkbox checkbox-slider-lg checkbox-slider--a">
+            <label>
+              <input type="checkbox" data-style="ios" data-onstyle="success" data-offstyle="danger" data-toggle="toggle" data-on="ON" data-off="OFF" data-width="110" data-height="40">
+            </label>
+          </div>
+
+          <!-- Dividing line -->
+          <hr>
+
           <label>
-            <input type="checkbox" data-style="ios" data-onstyle="success" data-offstyle="danger" data-toggle="toggle" data-on="ON" data-off="OFF" data-width="110" data-height="40">
+            <span id="click-tag" class="glyphicon glyphicon-chevron-down menu-item"></span>
           </label>
+
+          
+
+          <a class = "carousel-control glyphicon glyphicon-question-sign" href = "#myCarousel" data-slide = "prev">
+          </a>
+
         </div>
 
-        <hr>
 
-        <label>
-          <span id="click-tag" class="glyphicon glyphicon-chevron-down menu-item"></span>
-
-        </label>
-
-      </div>
-
-
-      <!-- Option container -->
-      <div class="option-container center">
-        <div class="btn-group-vertical">
-          <div class="btn-group">
-            <button type="button" class="btn btn-warning"> Allow Ads on Page </button>
-          </div>
-          <div class="btn-group">
-            <button type="button" class="btn btn-warning"> Allow Ads on Domain </button>
-          </div>
-          <div class="btn-group">
-            <button type="button" class="btn btn-warning"> Do not Block Ads on Page </button>
+        <!-- Option container -->
+        <div class="option-container center">
+          <div class="btn-group-vertical">
+            <div class="btn-group">
+              <button type="button" class="btn btn-warning"> Allow Ads on Page </button>
+            </div>
+            <div class="btn-group">
+              <button type="button" class="btn btn-warning"> Allow Ads on Domain </button>
+            </div>
+            <div class="btn-group">
+              <button type="button" class="btn btn-warning"> Do not Block Ads on Page </button>
+            </div>
+            <h2> Statistics: </h2>
           </div>
         </div>
-        <h2> Statistics (?): </h2>
       </div>
+
+      
+      <div class = "item">
+        <div class="main-container center" alt = "Second slide"">
+
+          <!-- Plugin Tittle -->
+          <h1 class = "brand" >Info</h1>
+          <p class = "infoText">LionBlock is an adblocker very simple to use! Just press the slider to start blocking annoying adds!<hr>
+                                Adbusters Team:<br>
+            <ol>
+              <li>Francesco Polizzi</li>
+              <li> Andres Rodriguez </li>
+              <li> Boris Pallares </li>
+              <li> Marco De Lucca </li>
+              <li> Nicholas Haghighi </li>
+            </ol>
+          </p>
+          <a class = "carousel-control right glyphicon glyphicon-share-alt" href = "#myCarousel" data-slide = "next"></a>
+        </div>
+      </div>
+      
+   </div>
+   
+   <!-- Carousel nav -->
+
+  
+
+   
+
 
 
   <!--

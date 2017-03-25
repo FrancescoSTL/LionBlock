@@ -11,3 +11,5 @@ $("#click-tag").on('click', function(event){
     //document.getElementById('options').style.visibility='visible';
     $('.option-container').toggleClass('open');
 });
+
+$('.carousel').carousel('pause')

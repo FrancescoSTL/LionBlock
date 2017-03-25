@@ -5,7 +5,7 @@ body {
   width: 250px;
   display:block;
   overflow:auto;
-  background-color: white;
+  background-color: #f8f3de;
   /* max-width: 400px;
   max-height: 400px;*/
 }
@@ -37,7 +37,7 @@ li {list-style-type: none;}
 }
 
 h1, h2, h3, h4, h5 , h6 {
-  color:  #090f0f;
+  color:  #bdbdbd;
 }
 
 .brand {
@@ -46,7 +46,7 @@ h1, h2, h3, h4, h5 , h6 {
 
 .adBlocker {
   text-align: center;
-  color: #bdbdbd;
+  color: black;
 }
 
 h2 {
@@ -87,5 +87,18 @@ h2 {
 }
 
 .glyphicon {
-  font-size: 15px;
+  font-size: 17px;
+}
+
+.carousel-control.left {
+  background: none;
+}
+
+.carousel-control.right {
+  background: none;
+}
+
+.infoText {
+  text-align: justify;
+
 }
