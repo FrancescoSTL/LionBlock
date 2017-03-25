@@ -69,6 +69,10 @@ h2 {
 .main-container {
   height: 20%;
 }
+
+.info-container {
+  margin: 15px;
+}
 .option-container {
   display:block;
   overflow: hidden;

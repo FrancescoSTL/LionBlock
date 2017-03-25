@@ -40,3 +40,7 @@ Click on inspect views
     4. Function that parses URLs.
 
 ## FrontEnd
+
+	1. Document code.
+	2. Finish color palettes and template.
+	3. Get the UI components to interact with the back-end.
