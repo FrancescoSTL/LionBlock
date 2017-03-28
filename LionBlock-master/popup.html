@@ -1,0 +1,157 @@
+<!doctype html>
+<!--
+ This page is shown when the extension button is clicked, because the
+ "browser_action" field in manifest.json contains the "default_popup" key with
+ value "popup.html".
+ -->
+ <html>
+  <head>
+    <title>Lionblock Popup</title>
+
+    <!-- Section added by Marco De Lucca 
+      -  setting bootstrap 
+      -  Bootstrap Core CSS 
+         Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="assets/bootstrap-toggle-master/css/bootstrap2-toggle.min.css">
+
+    <!-- Bootstrap Core CSS -->
+    <!-- Latest compiled and minified CSS -->
+    <!-- <link href="assets/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet"> -->
+
+    <!-- Style CSS -->
+    <link href="assets/css/lionblock.css" rel="stylesheet" />
+  </head>
+
+  <body>
+  <!-- Section added by Marco De Lucca 
+      -  setting slider composed of two scenes, our main scene containing the ON/OFF button, headers and subheaders. 
+      -  Bootstrap Core  
+      - carousel slider allows for the multiple scene, similar to a composer -->
+    <div id = "sceneSlider" class = "carousel slide">
+
+      <!-- Carousel items -->
+      <div class = "carousel-inner">
+
+        <!-- Section added by Marco De Lucca 
+          -  setting the main container as the DEFAULT active element to display in the carousel. 
+          -  Bootstrap Core  
+          - carousel slider allows for the multiple scene, similar to a composer -->
+        <div class = "item active">
+
+          <!-- Main Screen Container 
+            -  Sets the main container as the DEFAULT active element. 
+            -  Contains the following elements:
+              + Lionblock logo HEADER
+              + The ON/OFF SLIDER that sets the main purpose BLOCK ADS.
+              + A divider.
+              + Dropdown icon, expands the menu for more advance options.
+          -->
+          <div class="main-container center" alt = "First slide"">
+
+            <!-- Plugin Tittle -->
+            <h1 class = "brand" ><img src="assets/images/lionblock-logo.png" ></h1>
+            <p class = "adBlocker">Ad Blocker for Lindenwood University.</p>
+
+            <!-- Rounded switch -->
+            <div class="checkbox checkbox-slider-lg checkbox-slider--a">
+              <label>
+                <input type="checkbox" data-style="ios" data-onstyle="success" data-offstyle="danger" data-toggle="toggle" data-on="ON" data-off="OFF" data-width="110" data-height="40">
+              </label>
+            </div>
+			
+            <!-- Dividing line -->
+            <hr>
+
+            <!-- Dropdown Arrow Icon -->
+            <label>
+              <span id="click-tag" class="glyphicon glyphicon-chevron-down menu-item"></span>
+            </label>
+
+            <!-- Information Button
+              - slides to the PREVIOUS slide in the carousel (to the left) -->
+            <a class = "carousel-control glyphicon glyphicon-question-sign" href = "#sceneSlider" data-slide = "prev"></a>
+          </div> <!-- Closing Main Screen Container -->
+
+          <!-- Option Screen Expander
+            -  Expands the main container for more advance options. 
+            -  Contains the following elements:
+              + Button: allow adds on page.
+              + Button: allow adds from domain.
+              + Button: Do not Block Ads on Page
+              + Statisctics: THIS NEEDS WORK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          -->
+          <div class="option-container center">
+            <!-- Group of all advance options  -->
+            <div class="btn-group-vertical">
+
+              <!-- First button  -->
+              <div class="btn-group">
+                <button style="text-align:left;" type="button" class="btn btn-warning"> Allow Ads on Page </button>
+              </div>
+
+              <!-- Second button  -->
+              <div class="btn-group">
+                <button style="text-align:left;"type="button" class="btn btn-warning"> Allow Ads from Domain </button>
+              </div>
+
+              <!-- Third button  -->
+              <div class="btn-group">
+                <button style="text-align:left;" type="button" class="btn btn-warning"> Do not Block Ads on Page </button>
+              </div>
+              <h2> Statistics: </h2>
+			  <h3 style="color:blue;">Blocked on Page:</h3>
+			  <h3 style="color:blue;"> &nbsp; &nbsp; &nbsp;Total Blocked:</h3>
+			  
+			  
+            </div>
+			<hr>
+			  <p style="text-align: right;">Copyright: 2017 @LionBlock </p>
+          </div>
+
+        </div>
+
+        <!-- Information Left Carousel Scene
+            -  Expands the main container for more advance options. 
+            -  Contains the following elements:
+              + Header and team names. THIS NEEDS WORK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          -->
+        <div class = "item">
+          <div class="info-container center" alt = "Second slide"">
+
+            <!-- Plugin Tittle -->
+            <h1 class = "brand" >Info</h1>
+
+            <!-- Instruction and Description -->
+            <p class = "infoText"><b>LionBlock</b> is an adblocker very simple to use! Just press the slider to start blocking annoying adds!<hr>
+			<h2 style="text-align: center;">Adbusters Team:</h2>
+			
+              <ol style="text-align: inherit; margin-left: 30px;">
+				<b>
+                <li>Francesco Polizzi</li>
+                <li> Andres Rodriguez </li>
+                <li> Boris Pallares </li>
+                <li> Marco De Lucca </li>
+                <li> Nicholas Haghighi </li>
+				</b>
+              </ol>
+            </p>
+
+            <!-- Go Back Button Slider Carousel to the right -->
+            <a class = "carousel-control right glyphicon glyphicon-share-alt movement" id ="carouselLeftMove" href = "#sceneSlider" data-slide = "next"></a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  <!--
+    - Calling Bootstrap JS and Jquery
+   -->
+  <script src="assets/jquery/jquery-3.1.1.min.js"></script>
+  <script src="assets/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+  <script src="popup.js"></script>
+  <script src="assets/bootstrap-toggle-master/js/bootstrap2-toggle.min.js"></script>
+  </body>
+</html>
