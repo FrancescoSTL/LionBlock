@@ -12,9 +12,11 @@
     "default_popup": "popup.html"
   },
   "permissions": [
+    "storage",
     "webRequest",
     "webRequestBlocking",
     "tabs",
+    "runtime",
     "<all_urls>"
   ]
 }

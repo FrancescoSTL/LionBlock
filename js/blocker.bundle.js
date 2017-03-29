@@ -18361,25 +18361,49 @@ var whitelistSet =new Set();
 const disconnectJSON = require('../data/disconnect.json');
 const disconnectEntitylist = require('../data/disconnectEntitylist.json');
 var {allHosts, canonicalizeHost} = require('../js/canonicalize.js');
+var blocking = false;
 
 // NOTE: in isAd in SiteSonar HOST is the url in which all the ads are being loaded into and ORIGIN is the url from where the ad is being triggered. Example, the javascript file that generates the request.
 
-parseJason();
+parseJSON();
 //parseDisconnectEntity();
+
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    // if we've got a blocking command
+    if (typeof request.blocking !== 'undefined') {
+        console.log("recieved from frontend " + request.blocking);
+        // note that we'd like to toggle blocking
+        if (blocking) {
+          blocking = false;
+        } else {
+          blocking = true;
+        }
+    } else if (typeof request.blockingCheck !== 'undefined') {
+      sendResponse({"isBlocking": blocking});
+      console.log("sending response" + blocking);
+    }
+  }
+);
+
 
 chrome.webRequest.onBeforeSendHeaders.addListener(function(details) {
     // do the blocking
 
-    var areWeCancelling; // boolean checking blocking status
-    var assetAdHost = canonicalizeHost(parseURI(details.url).hostname);
+    if (blocking) {
+      var areWeCancelling; // boolean checking blocking status
+      var assetAdHost = canonicalizeHost(parseURI(details.url).hostname);
 
-    if(isAd(details.url)) {
-    	areWeCancelling = true;
-    	console.log("bitch we be blockin " + assetAdHost);
+      if(isAd(details.url)) {
+        areWeCancelling = true;
+        console.log("bitch we be blockin " + assetAdHost);
+      }
+
+
+      return {cancel: areWeCancelling};
     }
 
-
-    return {cancel: areWeCancelling};
+    return;
 },{urls:["*://*/*"]}, ["blocking", "requestHeaders"]);
 
 /*
@@ -18391,8 +18415,8 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function(details) {
 function isAd(url) {
   // if url is something like ads.click.com then you would get all the hosts.. click.com
   var getHostAd = allHosts(parseURI(url).hostname);
-  console.log("Before "+parseURI(url).hostname);
-  console.log("After "+ getHostAd );
+  //console.log("Before "+parseURI(url).hostname);
+  //console.log("After "+ getHostAd );
 
   if(whitelistSet.has(getHostAd)){
     //return false;
@@ -18421,7 +18445,7 @@ function parseURI(url) {
 }// end parse url
 
 
-function parseJason(){
+function parseJSON(){
 
 //delete disconnectJSON.categories['Content']
 //delete disconnectJSON.categories['Legacy Disconnect']
@@ -18444,7 +18468,7 @@ function parseJason(){
 	      }
     }
 
-}// end parse Jason
+}// end parse JSON
 
 /*
 function parseDisconnectEntity(){
