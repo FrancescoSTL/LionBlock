@@ -38,11 +38,15 @@ li {list-style-type: none;}
 
 }
 
-h1, h2, h3, h4, h5 , h6 {
-  color:  #bdbdbd;
+h1, h2, h4, h5 , h6 {
+  color:  #808080;
   
 }
-
+/* This is for the Statistics Label */
+.stats{
+	color: #808080;	
+	font-weight: bold;
+}
 .brand {
 
   text-align: center;
@@ -95,7 +99,7 @@ h3 {
   /*visibility: hidden;*/
 }
 
-.option-container.open { height: 250px;}
+.option-container.open { height: 275px;}
 
 #click-tag {
   left: 120px;
@@ -132,8 +136,8 @@ h3 {
 
 .btn-warning {
 	
-	background-color: #0147FA;
-	border-color: #0147FA;
+	background-color: #1E90FF;
+	border-color: #1E90FF;
 	
 	
 	
@@ -141,9 +145,15 @@ h3 {
 
 .btn-warning:hover {
 	
-	background-color: red;
-	border-color: blue;
+	background-color: #2C5197;
+	border-color: #2C5197;
 	
 	
+	
+}
+/*This is to move the Github Logo*/
+.logoMove{
+	position: relative;    
+	top: -2px;
 	
 }
