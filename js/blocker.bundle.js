@@ -18396,7 +18396,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function(details) {
 
       if(isAd(details.url)) {
         areWeCancelling = true;
-        console.log("bitch we be blockin " + assetAdHost);
+        console.log("Yo we be blockin " + assetAdHost);
       }
 
 
@@ -18423,9 +18423,9 @@ function isAd(url) {
   }
 
 for (var host in getHostAd){
- 	if(blocklistSet.has(getHostAd[host])) {
-		return true;
-	}
+  if(blocklistSet.has(getHostAd[host])) {
+    return true;
+  }
 }
 return false;
 
@@ -18450,41 +18450,37 @@ function parseJSON(){
 //delete disconnectJSON.categories['Content']
 //delete disconnectJSON.categories['Legacy Disconnect']
 //delete disconnectJSON.categories['Legacy Content']
-	// parse our disconnect JSON into a set where we only include the hostname and subdomain urls
+  // parse our disconnect JSON into a set where we only include the hostname and subdomain urls
     for(var category in disconnectJSON.categories) {
       //  Advertising, Content ,Analytics, Social, Disconnect
-	    for(var network in disconnectJSON.categories[category]) {
- 	        for(var hostname in disconnectJSON.categories[category][network]) {
+      for(var network in disconnectJSON.categories[category]) {
+          for(var hostname in disconnectJSON.categories[category][network]) {
              // 2leep.com , 33Across , 4INFO ,4mads ...... and so on
-	            blocklistSet.add(hostname); // add to the set
-	            for(var subDomain in disconnectJSON.categories[category][network][hostname]) {
+              blocklistSet.add(hostname); // add to the set
+              for(var subDomain in disconnectJSON.categories[category][network][hostname]) {
                 // gets the subdomain as http://2leep.com/ , http://33across.com/ , http://www.4info.com/
-	                for(var entitySubDomain in disconnectJSON.categories[category][network][hostname][subDomain]) {
+                  for(var entitySubDomain in disconnectJSON.categories[category][network][hostname][subDomain]) {
                     // gets wierd random numbers
-	                     blocklistSet.add(disconnectJSON.categories[category][network][hostname][subDomain][entitySubDomain]);
-	                }
-	            }
-	        }
-	      }
+                       blocklistSet.add(disconnectJSON.categories[category][network][hostname][subDomain][entitySubDomain]);
+                  }
+              }
+          }
+        }
     }
 
 }// end parse JSON
 
 /*
 function parseDisconnectEntity(){
-
   for(var network in disconnectEntitylist) {
      for(var type in disconnectEntitylist[network]) {
         for(var resources in disconnectEntitylist[network][type]) {
           whitelistSet.add(disconnectEntitylist[network][type][resources]);
         }
-
     }
   }
-
 }
 */
-
 },{"../data/disconnect.json":1,"../data/disconnectEntitylist.json":2,"../js/canonicalize.js":4}],4:[function(require,module,exports){
 var ip4DecimalPattern = '^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).){3}(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))$'
 var ip4HexPattern = '^(?:(?:0x[0-9a-f]{1,2}).){3}(?:0x[0-9a-f]{1,2})$'
