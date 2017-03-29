@@ -8,6 +8,10 @@ var blocking = false;
 
 // NOTE: in isAd in SiteSonar HOST is the url in which all the ads are being loaded into and ORIGIN is the url from where the ad is being triggered. Example, the javascript file that generates the request.
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 469d586c277194cea0cb31d033c52558ba458214
 parseJSON();
 //parseDisconnectEntity();
 

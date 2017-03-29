@@ -59,7 +59,7 @@
                 <input id="blockingCheckbox" type="checkbox" data-style="ios" data-onstyle="success" data-offstyle="danger" data-toggle="toggle" data-on="ON" data-off="OFF" data-width="110" data-height="40">
               </label>
             </div>
-
+			
             <!-- Dividing line -->
             <hr>
 
@@ -87,20 +87,26 @@
 
               <!-- First button  -->
               <div class="btn-group">
-                <button type="button" class="btn btn-warning"> Allow Ads on Page </button>
+                <button style="text-align:left;" type="button" class="btn btn-default"> Allow Ads on Page </button>
               </div>
 
               <!-- Second button  -->
               <div class="btn-group">
-                <button type="button" class="btn btn-warning"> Allow Ads from Domain </button>
+                <button style="text-align:left;"type="button" class="btn btn-warning"> Allow Ads from Domain </button>
               </div>
 
               <!-- Third button  -->
               <div class="btn-group">
-                <button type="button" class="btn btn-warning"> Do not Block Ads on Page </button>
+                <button style="text-align:left;" type="button" class="btn btn-warning"> Do not Block Ads on Page </button>
               </div>
               <h2> Statistics: </h2>
+			  <h3 style="color:blue;">Blocked on Page:</h3>
+			  <h3 style="color:blue;"> &nbsp; &nbsp; &nbsp;Total Blocked:</h3>
+			  
+			  
             </div>
+			<hr>
+			  <p style="text-align: right;">Copyright: 2017 @LionBlock </p>
           </div>
 
         </div>
@@ -117,18 +123,22 @@
             <h1 class = "brand" >Info</h1>
 
             <!-- Instruction and Description -->
-            <p class = "infoText">LionBlock is an adblocker very simple to use! Just press the slider to start blocking annoying adds!<hr>Adbusters Team:<br>
-              <ol>
+            <p class = "infoText"><b>LionBlock</b> is an adblocker very simple to use! Just press the slider to start blocking annoying adds!<hr>
+			<h2 style="text-align: center;">Adbusters Team:</h2>
+			
+              <ol style="text-align: inherit; margin-left: 30px;">
+				<b>
                 <li>Francesco Polizzi</li>
                 <li> Andres Rodriguez </li>
                 <li> Boris Pallares </li>
                 <li> Marco De Lucca </li>
                 <li> Nicholas Haghighi </li>
+				</b>
               </ol>
             </p>
 
             <!-- Go Back Button Slider Carousel to the right -->
-            <a class = "carousel-control right glyphicon glyphicon-share-alt" href = "#sceneSlider" data-slide = "next"></a>
+            <a class = "carousel-control right glyphicon glyphicon-share-alt movement" id ="carouselLeftMove" href = "#sceneSlider" data-slide = "next"></a>
           </div>
         </div>
       </div>
