@@ -5,8 +5,9 @@ body {
   width: 250px;
   display:block;
   overflow:auto;
-  background-color: #f8f3de;
+  background-color: rgba(0, 0, 0, .05);
   /* max-width: 400px;
+  #f8f3de
   max-height: 400px;*/
 }
 #status {
@@ -25,6 +26,7 @@ hr {
     margin-right: auto;
     border-style: inset;
     border-width: 1px;
+	width: 100%
 }
 
 
@@ -38,9 +40,11 @@ li {list-style-type: none;}
 
 h1, h2, h3, h4, h5 , h6 {
   color:  #bdbdbd;
+  
 }
 
 .brand {
+
   text-align: center;
 }
 
@@ -51,6 +55,12 @@ h1, h2, h3, h4, h5 , h6 {
 
 h2 {
   font-size: 18px;
+  font-weight: bold;
+}
+h3 {
+	font-size: 14px;
+	margin-left: 15px;
+	
 }
 
 .checkbox {
@@ -67,11 +77,12 @@ h2 {
   .toggle.ios .toggle-handle { border-radius: 20px; }
 
 .main-container {
-  height: 20%;
+  height: 25%;
 }
 
 .info-container {
   margin: 15px;
+  height: 25%;
 }
 .option-container {
   display:block;
@@ -105,4 +116,34 @@ h2 {
 .infoText {
   text-align: justify;
 
+}
+#carouselLeftMove{
+	position: fixed;
+	
+}
+.carousel-control {
+
+	
+}
+.carousel-control .right .glyphicon .glyphicon-share-alt .movement{
+		top: 200px;
+	
+}
+
+.btn-warning {
+	
+	background-color: #0147FA;
+	border-color: #0147FA;
+	
+	
+	
+}
+
+.btn-warning:hover {
+	
+	background-color: red;
+	border-color: blue;
+	
+	
+	
 }
