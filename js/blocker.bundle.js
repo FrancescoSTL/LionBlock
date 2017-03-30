@@ -18372,12 +18372,13 @@ chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     // if we've got a blocking command
     if (typeof request.blocking !== 'undefined') {
-        console.log("recieved from frontend " + request.blocking);
         // note that we'd like to toggle blocking
         if (blocking) {
           blocking = false;
+          console.log("Ad blocking disabled");
         } else {
           blocking = true;
+          console.log("Ad blocking enabled");
         }
     } else if (typeof request.blockingCheck !== 'undefined') {
       sendResponse({"isBlocking": blocking});
@@ -18397,6 +18398,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function(details) {
       if(isAd(details.url)) {
         areWeCancelling = true;
         console.log("Yo we be blockin " + assetAdHost);
+        console.log(details);
       }
 
 
