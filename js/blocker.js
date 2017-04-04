@@ -98,6 +98,7 @@ function parseJSON(){
   // parse our disconnect JSON into a set where we only include the hostname and subdomain urls
     for(var category in disconnectJSON.categories) {
       //  Advertising, Content ,Analytics, Social, Disconnect
+      if (category != "Content" && category != "Disconnect") { console.log(category);
       for(var network in disconnectJSON.categories[category]) {
           for(var hostname in disconnectJSON.categories[category][network]) {
              // 2leep.com , 33Across , 4INFO ,4mads ...... and so on
@@ -110,7 +111,8 @@ function parseJSON(){
                   }
               }
           }
-        }
+        }  
+      }
     }
 
 }// end parse JSON
