@@ -2,6 +2,7 @@
 var adsBlocked = 0; // ads blocked counter
 var blocklistSet = new Set();
 var whitelistSet = new Set();
+var currentTabURLs = {};
 const disconnectJSON = require('../data/disconnect.json');
 const disconnectEntitylist = require('../data/disconnectEntitylist.json');
 var {
@@ -47,7 +48,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
     if (isAd(details)) {
       areWeCancelling = true;
       adsBlocked += 1; // update total ads blocked
-      console.log("Yo we be blockin " + assetAdHost);
+      //console.log("Yo we be blockin " + assetAdHost);
       //console.log(details);
     }
 
@@ -61,6 +62,19 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
   urls: ["*://*/*"]
 }, ["blocking", "requestHeaders"]);
 
+
+chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+  /*console.log("------------------");
+  for(var tabnum in currentTabURLs) {
+    console.log(currentTabURLs[tabnum]);
+  }*/
+  currentTabURLs[tabId] = tab.url;
+});
+
+chrome.tabs.onRemoved.addListener(function (tabId, removeInfo) {
+  currentTabURLs[tabId] = null;
+});
+
 /*
  * By Francesco
  *
@@ -73,79 +87,81 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
 function isAd(details) {
   var url = details.url;
   var currentTabUrl;
-  chrome.tabs.query({
-      'active': true,
-      'windowId': chrome.windows.WINDOW_ID_CURRENT
-    },
-    function (tabs) {
-      // http://www.easybib.com
-      currentTabUrl = tabs[0].url;
-    }
-  );
 
-  /* 
-  TODO: We need to first check the actual website we are on (which we get from chrome.tabs). Then, check if this host is a resource of an entity. If it is, we check if the origin of the request is part of this entity's resources. If it is, we should not block them. On the contrary, blocking heeaders should happen.
-  */
-
-  // the site who is making the request
-  var origin = canonicalizeHost(parseURI(url).hostname);
-  // this is the page we are on 
-  var host = canonicalizeHost(parseURI(currentTabUrl).hostname);
-
-  // facebook.com can request facebook.com... We want 3rd party requests
-  if (origin !== host) {
-    // loop through the disconnectEntityList 
-    for (var entityName in disconnectEntitylist) {
-      var entity = disconnectEntitylist[entityName];
-      var requestIsEntityResource;
-      var originIsEntityProperty;
-      var requestEntityName;
-
-      // loop through all the hosts and check if host is a resource for the entity
-      for (var reqHost of allHosts(host)) {
-        requestIsEntityResource = entity.resources.indexOf(host) > -1;
-        // if found, just stop looping
-        if (requestIsEntityResource) {
-          break;
-        }
-      }
-
-      // loop through all the properties and check if it is a property of the entity
-      for (var reqOrigin of allHosts(origin)) {
-        originIsEntityProperty = entity.properties.indexOf(origin) > -1;
-        // if found, just stop looping
-        if (originIsEntityProperty) {
-          break;
-        }
-      }
-
-      // if our origin is a property and host is a resource of the entity, return false
-      if (originIsEntityProperty && requestIsEntityResource) {
-        return false;
-      }
-    }
-
-    // if it did not pass the checking, we be blockin'
-    return true;
-  } 
-  // UNSURE ABOUT THIS! HAVE A FEELING THIS SHOULD NOW BE IN AN ELSE!
-  else {
-    // if url is something like ads.click.com then you would get all the hosts.. click.com
-    var getHostAd = allHosts(parseURI(url).hostname);
-    //console.log("Before "+parseURI(url).hostname);
-    //console.log("After "+ getHostAd );
-
-    if (whitelistSet.has(getHostAd)) {
-      //return false;
-    }
-
-    for (var host in getHostAd) {
-      if (blocklistSet.has(getHostAd[host])) {
-        return true;
-      }
-    }
+  // if the tabid is -1, it isn't from a tab (from a browser) so we know it isn't an ad
+  if (details.tabId === -1) {
     return false;
   }
+
+  
+      // http://www.easybib.com
+      //console.log(currentTabURLs[details.tabId]);
+      currentTabUrl = currentTabURLs[details.tabId];
+
+      /* 
+      TODO: We need to first check the actual website we are on (which we get from chrome.tabs). Then, check if this host is a resource of an entity. If it is, we check if the origin of the request is part of this entity's resources. If it is, we should not block them. On the contrary, blocking heeaders should happen.
+      */
+
+      // the site who is making the request
+      var requestHost = canonicalizeHost(parseURI(url).hostname);
+
+      // this is the page we are on 
+      //var pageHost = canonicalizeHost(parseURI(currentTabUrl).hostname);
+      var pageHost = canonicalizeHost(parseURI(currentTabUrl).hostname);
+
+      // facebook.com can request facebook.com... We want 3rd party requests
+      if (requestHost !== pageHost) {
+        // loop through the disconnectEntityList 
+        for (var entityName in disconnectEntitylist) {
+          var entity = disconnectEntitylist[entityName];
+          var pageIsEntityResource;
+          var requestIsEntityProperty;
+
+          // loop through all the entity resources and check if request host is an accepted resource for the entity
+          for (var host of allHosts(requestHost)) {
+            requestIsEntityResource = entity.resources.indexOf(host) > -1;
+            // if found, just stop looping
+            if (requestIsEntityResource) {
+              console.log("our request host is a resource for the entity " + entityName + " for " + requestHost + " with page host " + pageHost);
+              break;
+            }
+          }
+
+          // loop through all the properties and check if it is a property of the entity
+          for (var origin of allHosts(pageHost)) {
+            pageIsEntityProperty = entity.properties.indexOf(origin) > -1;
+            // if found, just stop looping
+            if (pageIsEntityProperty) {
+              console.log("our page host is a property for the entity " + entityName + " for " + pageHost + " with request host " + requestHost);
+              break;
+            }
+          }
+
+          // if our origin is a property and host is a resource of the entity, return false
+          if (pageIsEntityProperty && requestIsEntityResource) {
+            return false;
+          }
+        }
+
+        // if url is something like ads.click.com then you would get all the hosts.. click.com
+        var getHostAd = allHosts(parseURI(url).hostname);
+        //console.log("Before "+parseURI(url).hostname);
+        //console.log("After "+ getHostAd );
+
+        /*if (whitelistSet.has(getHostAd)) {
+          //return false;
+        }*/
+
+        for (var host in getHostAd) {
+          if (blocklistSet.has(getHostAd[host])) {
+            //console.log(getHostAd[host] + " is an ad");
+            return true;
+          }
+        }
+      }
+
+      console.log(parseURI(url).hostname + " is not an ad");
+      return false; 
 }
 
 function parseURI(url) {
