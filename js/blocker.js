@@ -1,9 +1,13 @@
 // Set of the hostnames that are going to be blocked
+var adsBlocked = 0; // ads blocked counter
 var blocklistSet = new Set();
-var whitelistSet =new Set();
+var whitelistSet = new Set();
 const disconnectJSON = require('../data/disconnect.json');
 const disconnectEntitylist = require('../data/disconnectEntitylist.json');
-var {allHosts, canonicalizeHost} = require('../js/canonicalize.js');
+var {
+  allHosts,
+  canonicalizeHost
+} = require('../js/canonicalize.js');
 var blocking = false;
 
 // NOTE: in isAd in SiteSonar HOST is the url in which all the ads are being loaded into and ORIGIN is the url from where the ad is being triggered. Example, the javascript file that generates the request.
@@ -12,110 +16,185 @@ parseJSON();
 //parseDisconnectEntity();
 
 chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
+  function (request, sender, sendResponse) {
     // if we've got a blocking command
     if (typeof request.blocking !== 'undefined') {
-        // note that we'd like to toggle blocking
-        if (blocking) {
-          blocking = false;
-          console.log("Ad blocking disabled");
-        } else {
-          blocking = true;
-          console.log("Ad blocking enabled");
-        }
+      // note that we'd like to toggle blocking
+      if (blocking) {
+        blocking = false;
+        console.log("Ad blocking disabled");
+      } else {
+        blocking = true;
+        console.log("Ad blocking enabled");
+      }
     } else if (typeof request.blockingCheck !== 'undefined') {
-      sendResponse({"isBlocking": blocking});
+      sendResponse({
+        "isBlocking": blocking
+      });
       console.log("sending response" + blocking);
     }
   }
 );
 
 
-chrome.webRequest.onBeforeSendHeaders.addListener(function(details) {
-    // do the blocking
+chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
+  // do the blocking
 
-    if (blocking) {
-      var areWeCancelling; // boolean checking blocking status
-      var assetAdHost = canonicalizeHost(parseURI(details.url).hostname);
+  if (blocking) {
+    var areWeCancelling; // boolean checking blocking status
+    var assetAdHost = canonicalizeHost(parseURI(details.url).hostname);
 
-      if(isAd(details.url)) {
-        areWeCancelling = true;
-        console.log("Yo we be blockin " + assetAdHost);
-        console.log(details);
-      }
-
-
-      return {cancel: areWeCancelling};
+    if (isAd(details)) {
+      areWeCancelling = true;
+      adsBlocked += 1; // update total ads blocked
+      console.log("Yo we be blockin " + assetAdHost);
+      //console.log(details);
     }
 
-    return;
-},{urls:["*://*/*"]}, ["blocking", "requestHeaders"]);
+    return {
+      cancel: areWeCancelling
+    };
+  }
+
+  return;
+}, {
+  urls: ["*://*/*"]
+}, ["blocking", "requestHeaders"]);
 
 /*
-* By Francesco
-*
-* Edited by Boris Pallres
-* @returns true if it is an ad.
-*/
-function isAd(url) {
-  // if url is something like ads.click.com then you would get all the hosts.. click.com
-  var getHostAd = allHosts(parseURI(url).hostname);
-  //console.log("Before "+parseURI(url).hostname);
-  //console.log("After "+ getHostAd );
+ * By Francesco
+ *
+ * Edited by Boris Pallres
+ * 
+ * Edited by Andres Rodriguez 04/05/2017
+ * 
+ * @returns true if it is an ad.
+ */
+function isAd(details) {
+  var url = details.url;
+  var currentTabUrl;
+  chrome.tabs.query({
+      'active': true,
+      'windowId': chrome.windows.WINDOW_ID_CURRENT
+    },
+    function (tabs) {
+      // http://www.easybib.com
+      currentTabUrl = tabs[0].url;
+    }
+  );
 
-  if(whitelistSet.has(getHostAd)){
-    //return false;
-  }
+  /* 
+  TODO: We need to first check the actual website we are on (which we get from chrome.tabs). Then, check if this host is a resource of an entity. If it is, we check if the origin of the request is part of this entity's resources. If it is, we should not block them. On the contrary, blocking heeaders should happen.
+  */
 
-for (var host in getHostAd){
-  if(blocklistSet.has(getHostAd[host])) {
+  // the site who is making the request
+  var origin = canonicalizeHost(parseURI(url).hostname);
+  // this is the page we are on 
+  var host = canonicalizeHost(parseURI(currentTabUrl).hostname);
+
+  // facebook.com can request facebook.com... We want 3rd party requests
+  if (origin !== host) {
+    // loop through the disconnectEntityList 
+    for (var entityName in disconnectEntitylist) {
+      var entity = disconnectEntitylist[entityName];
+      var requestIsEntityResource;
+      var originIsEntityProperty;
+      var requestEntityName;
+
+      // loop through all the hosts and check if host is a resource for the entity
+      for (var reqHost of allHosts(host)) {
+        requestIsEntityResource = entity.resources.indexOf(host) > -1;
+        // if found, just stop looping
+        if (requestIsEntityResource) {
+          break;
+        }
+      }
+
+      // loop through all the properties and check if it is a property of the entity
+      for (var reqOrigin of allHosts(origin)) {
+        originIsEntityProperty = entity.properties.indexOf(origin) > -1;
+        // if found, just stop looping
+        if (originIsEntityProperty) {
+          break;
+        }
+      }
+
+      // if our origin is a property and host is a resource of the entity, return false
+      if (originIsEntityProperty && requestIsEntityResource) {
+        return false;
+      }
+    }
+
+    // if it did not pass the checking, we be blockin'
     return true;
-  }
-}
-return false;
+  } 
+  // UNSURE ABOUT THIS! HAVE A FEELING THIS SHOULD NOW BE IN AN ELSE!
+  else {
+    // if url is something like ads.click.com then you would get all the hosts.. click.com
+    var getHostAd = allHosts(parseURI(url).hostname);
+    //console.log("Before "+parseURI(url).hostname);
+    //console.log("After "+ getHostAd );
 
+    if (whitelistSet.has(getHostAd)) {
+      //return false;
+    }
+
+    for (var host in getHostAd) {
+      if (blocklistSet.has(getHostAd[host])) {
+        return true;
+      }
+    }
+    return false;
+  }
 }
 
 function parseURI(url) {
-    var match = url.match(/^((https|http)?\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)(\/[^?#]*)(\?[^#]*|)(#.*|)$/);
-    return match && {
-        protocol: match[1],
-        host: match[2],
-        hostname: match[3],
-        port: match[4],
-        pathname: match[5],
-        search: match[6],
-        hash: match[7]
-    }
-}// end parse url
+  var match = url.match(/^((https|http)?\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)(\/[^?#]*)(\?[^#]*|)(#.*|)$/);
+  return match && {
+    protocol: match[1],
+    host: match[2],
+    hostname: match[3],
+    port: match[4],
+    pathname: match[5],
+    search: match[6],
+    hash: match[7]
+  }
+} // end parse url
 
 
-function parseJSON(){
+/*
+ * By Andres
+ * 
+ * parses the disconnect list and eliminates unnecessary categories
+ */
+function parseJSON() {
 
-//delete disconnectJSON.categories['Content']
-//delete disconnectJSON.categories['Legacy Disconnect']
-//delete disconnectJSON.categories['Legacy Content']
+  //delete disconnectJSON.categories['Content'];
+  //delete disconnectJSON.categories['Disconnect'];
+  //delete disconnectJSON.categories['Analytics'];
+  //delete disconnectJSON.categories['Social'];
+  //delete disconnectJSON.categories['Legacy Disconnect']
+  //delete disconnectJSON.categories['Legacy Content']
   // parse our disconnect JSON into a set where we only include the hostname and subdomain urls
-    for(var category in disconnectJSON.categories) {
-      //  Advertising, Content ,Analytics, Social, Disconnect
-      if (category != "Content" && category != "Disconnect") { console.log(category);
-      for(var network in disconnectJSON.categories[category]) {
-          for(var hostname in disconnectJSON.categories[category][network]) {
-             // 2leep.com , 33Across , 4INFO ,4mads ...... and so on
-              blocklistSet.add(hostname); // add to the set
-              for(var subDomain in disconnectJSON.categories[category][network][hostname]) {
-                // gets the subdomain as http://2leep.com/ , http://33across.com/ , http://www.4info.com/
-                  for(var entitySubDomain in disconnectJSON.categories[category][network][hostname][subDomain]) {
-                    // gets wierd random numbers
-                       blocklistSet.add(disconnectJSON.categories[category][network][hostname][subDomain][entitySubDomain]);
-                  }
-              }
+  for (var category in disconnectJSON.categories) {
+    //  Advertising, Content ,Analytics, Social, Disconnect
+    //if (category != "Content" && category != "Disconnect") { console.log(category);
+    for (var network in disconnectJSON.categories[category]) {
+      for (var hostname in disconnectJSON.categories[category][network]) {
+        // 2leep.com , 33Across , 4INFO ,4mads ...... and so on
+        blocklistSet.add(hostname); // add to the set
+        for (var subDomain in disconnectJSON.categories[category][network][hostname]) {
+          // gets the subdomain as http://2leep.com/ , http://33across.com/ , http://www.4info.com/
+          for (var entitySubDomain in disconnectJSON.categories[category][network][hostname][subDomain]) {
+            // gets wierd random numbers
+            blocklistSet.add(disconnectJSON.categories[category][network][hostname][subDomain][entitySubDomain]);
           }
-        }  
+        }
       }
     }
-
-}// end parse JSON
+  }
+  //}
+} // end parse JSON
 
 /*
 function parseDisconnectEntity(){
