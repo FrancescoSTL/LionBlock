@@ -18,13 +18,6 @@ module.exports={
         }
       },
       {
-        "3lift": {
-          "http://3lift.com/": [
-            "3lift.com"
-          ]
-        }
-      },
-      {
         "4INFO": {
           "http://www.4info.com/": [
             "4info.com",
