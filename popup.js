@@ -42,14 +42,14 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	});
 
+	// document.write("sup"); 
 	function showOptions() {
 	  document.getElementById('options').style.visibility='hidden';
 	}
 
-	$(".dropdown-container").on('click', function(event){
+	$("#click-tag").on('click', function(event){
 	    //document.getElementById('options').style.visibility='visible';
 	    $('.option-container').toggleClass('open');
-	    $("#click-tag").toggleClass('down');
 	});
 
 	$('.carousel').carousel('pause')

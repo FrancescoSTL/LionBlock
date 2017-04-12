@@ -1,6 +1,5 @@
 
 body {
-
   font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
   font-size: 100%;
   width: 250px;
@@ -11,7 +10,6 @@ body {
   #f8f3de
   max-height: 400px;*/
 }
-
 #status {
   /* avoid an excessively wide status text */
   white-space: pre;
@@ -28,13 +26,11 @@ hr {
     margin-right: auto;
     border-style: inset;
     border-width: 1px;
-  width: 100%
+	width: 100%
 }
 
 
-li {
-  list-style-type: none;
-}
+li {list-style-type: none;}
 
 .caret-right {
 
@@ -48,8 +44,8 @@ h1, h2, h4, h5 , h6 {
 }
 /* This is for the Statistics Label */
 .stats{
-  color: #808080; 
-  font-weight: bold;
+	color: #808080;	
+	font-weight: bold;
 }
 .brand {
 
@@ -66,9 +62,9 @@ h2 {
   font-weight: bold;
 }
 h3 {
-  font-size: 14px;
-  margin-left: 15px;
-  
+	font-size: 14px;
+	margin-left: 15px;
+	
 }
 
 .checkbox {
@@ -106,20 +102,7 @@ h3 {
 .option-container.open { height: 275px;}
 
 #click-tag {
-  left: 5px;
-  top: 1px;
-}
-
-.flip{
-    -moz-transition: all 0.3s linear;
-    -webkit-transition: all 0.3s linear;
-    transition: all 0.3s linear;
-}
-
-.flip.down{
-    -moz-transform:rotate(180deg);
-    -webkit-transform:rotate(180deg);
-    transform:rotate(180deg);
+  left: 120px;
 }
 
 .glyphicon {
@@ -139,43 +122,38 @@ h3 {
 
 }
 #carouselLeftMove{
-  position: fixed;
-  
+	position: fixed;
+	
 }
 .carousel-control {
 
-  
+	
 }
 .carousel-control .right .glyphicon .glyphicon-share-alt .movement{
-    top: 200px;
-  
+		top: 200px;
+	
 }
 
-.btn:active {
-
- background-color: #757575;
+.btn-warning {
+	
+	background-color: #1E90FF;
+	border-color: #1E90FF;
+	
+	
+	
 }
 
-.btn:hover {
-  
-  background-color: #757575;
-  
+.btn-warning:hover {
+	
+	background-color: #2C5197;
+	border-color: #2C5197;
+	
+	
+	
 }
 /*This is to move the Github Logo*/
 .logoMove{
-  position: relative;    
-  top: -2px;
-  
-}
-
-.btn-group {
-  padding: 1px;
-}
-
-.option-title {
-  padding-left: 30%;
-}
-
-.glyphicon {
-  max-height: 10%;
+	position: relative;    
+	top: -2px;
+	
 }

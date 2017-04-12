@@ -18359,6 +18359,7 @@ module.exports={
 var adsBlocked = 0; // ads blocked counter
 var blocklistSet = new Set();
 var whitelistSet = new Set();
+var whitePage;
 var currentTabURLs = {};
 const disconnectJSON = require('../data/disconnect.json');
 const disconnectEntitylist = require('../data/disconnectEntitylist.json');
@@ -18466,6 +18467,13 @@ function isAd(details) {
       //var pageHost = canonicalizeHost(parseURI(currentTabUrl).hostname);
       var pageHost = canonicalizeHost(parseURI(currentTabUrl).hostname);
 
+      // we get white list from the buttons ...
+      // lets say is easybib.com
+      //whitePage = "www.easybib.com";
+      /*
+      if (pageHost == whitePage)
+      return false;*/
+
       // facebook.com can request facebook.com... We want 3rd party requests
       if (requestHost !== pageHost) {
         // loop through the disconnectEntityList 
@@ -18479,7 +18487,7 @@ function isAd(details) {
             requestIsEntityResource = entity.resources.indexOf(host) > -1;
             // if found, just stop looping
             if (requestIsEntityResource) {
-              console.log("our request host is a resource for the entity " + entityName + " for " + requestHost + " with page host " + pageHost);
+              //console.log("our request host is a resource for the entity " + entityName + " for " + requestHost + " with page host " + pageHost);
               break;
             }
           }
@@ -18489,7 +18497,7 @@ function isAd(details) {
             pageIsEntityProperty = entity.properties.indexOf(origin) > -1;
             // if found, just stop looping
             if (pageIsEntityProperty) {
-              console.log("our page host is a property for the entity " + entityName + " for " + pageHost + " with request host " + requestHost);
+              //console.log("our page host is a property for the entity " + entityName + " for " + pageHost + " with request host " + requestHost);
               break;
             }
           }
@@ -18511,13 +18519,13 @@ function isAd(details) {
 
         for (var host in getHostAd) {
           if (blocklistSet.has(getHostAd[host])) {
-            //console.log(getHostAd[host] + " is an ad");
+            console.log(getHostAd[host] + " is an ad");
             return true;
           }
         }
       }
 
-      console.log(parseURI(url).hostname + " is not an ad");
+     // console.log(parseURI(url).hostname + " is not an ad");
       return false; 
 }
 
