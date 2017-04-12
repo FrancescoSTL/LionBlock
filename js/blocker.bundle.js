@@ -18421,11 +18421,21 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
 
 
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+  currentTabURLs[tabId] = tab.url;
   /*console.log("------------------");
   for(var tabnum in currentTabURLs) {
     console.log(currentTabURLs[tabnum]);
   }*/
-  currentTabURLs[tabId] = tab.url;
+});
+
+chrome.tabs.onReplaced.addListener(function (addedTabId, removedTabId) {
+  chrome.tabs.get(addedTabId, function (tab) {
+    currentTabURLs[addedTabId] = tab.url;
+    /*console.log("------------------");
+    for(var tabnum in currentTabURLs) {
+      console.log(currentTabURLs[tabnum]);
+    }*/
+  });
 });
 
 chrome.tabs.onRemoved.addListener(function (tabId, removeInfo) {
@@ -18479,7 +18489,7 @@ function isAd(details) {
             requestIsEntityResource = entity.resources.indexOf(host) > -1;
             // if found, just stop looping
             if (requestIsEntityResource) {
-              console.log("our request host is a resource for the entity " + entityName + " for " + requestHost + " with page host " + pageHost);
+              //console.log("our request host is a resource for the entity " + entityName + " for " + requestHost + " with page host " + pageHost);
               break;
             }
           }
@@ -18489,7 +18499,7 @@ function isAd(details) {
             pageIsEntityProperty = entity.properties.indexOf(origin) > -1;
             // if found, just stop looping
             if (pageIsEntityProperty) {
-              console.log("our page host is a property for the entity " + entityName + " for " + pageHost + " with request host " + requestHost);
+              //console.log("our page host is a property for the entity " + entityName + " for " + pageHost + " with request host " + requestHost);
               break;
             }
           }
@@ -18517,7 +18527,7 @@ function isAd(details) {
         }
       }
 
-      console.log(parseURI(url).hostname + " is not an ad");
+      //console.log(parseURI(url).hostname + " is not an ad");
       return false; 
 }
 
