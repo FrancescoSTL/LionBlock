@@ -18367,6 +18367,8 @@ var {
   canonicalizeHost
 } = require('../js/canonicalize.js');
 var blocking = false;
+var allowUrlList = [];
+var allowDomainList = [];
 
 // NOTE: in isAd in SiteSonar HOST is the url in which all the ads are being loaded into and ORIGIN is the url from where the ad is being triggered. Example, the javascript file that generates the request.
 
@@ -18390,6 +18392,10 @@ chrome.runtime.onMessage.addListener(
         "isBlocking": blocking
       });
       console.log("sending response" + blocking);
+    } else if (typeof request.allowDomainList !== 'undefined') {
+      allowDomainList = request.allowDomainList;
+    } else if (typeof request.allowUrlList !== 'undefined') {
+      allowUrlList = request.allowUrlList;
     }
   }
 );
@@ -18475,6 +18481,20 @@ function isAd(details) {
       // this is the page we are on 
       //var pageHost = canonicalizeHost(parseURI(currentTabUrl).hostname);
       var pageHost = canonicalizeHost(parseURI(currentTabUrl).hostname);
+
+      /*for (url in allowUrlList) {
+        if (allowUrlList[url] == currentTabUrl) {
+          console.log("STOPPING BLOCKING FOR PAGE " + currentTabUrl);
+          break;
+        }
+      }
+
+      for (url in allowDomainList) {
+        if (canonicalizeHost(parseURI(allowDomainList[url]).hostname) == pageHost) {
+          console.log("STOPPING BLOCKING FOR DOMAIN " + pageHost);
+          break;
+        }
+      }*/
 
       // facebook.com can request facebook.com... We want 3rd party requests
       if (requestHost !== pageHost) {
