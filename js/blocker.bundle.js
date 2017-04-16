@@ -18482,19 +18482,23 @@ function isAd(details) {
       //var pageHost = canonicalizeHost(parseURI(currentTabUrl).hostname);
       var pageHost = canonicalizeHost(parseURI(currentTabUrl).hostname);
 
-      /*for (url in allowUrlList) {
-        if (allowUrlList[url] == currentTabUrl) {
+      
+      //THIS IS THE CODE WHICH IS BREAKING EVERYTHING -- don't know why yet
+      
+      console.log("Current Tab =" +currentTabUrl);
+      for (urlD in allowUrlList) {
+        if (allowUrlList[urlD] == currentTabUrl) {
           console.log("STOPPING BLOCKING FOR PAGE " + currentTabUrl);
-          break;
+          return false;
         }
       }
 
-      for (url in allowDomainList) {
-        if (canonicalizeHost(parseURI(allowDomainList[url]).hostname) == pageHost) {
+      for (urlD in allowDomainList) {
+        if (canonicalizeHost(parseURI(allowDomainList[urlD]).hostname) == pageHost) {
           console.log("STOPPING BLOCKING FOR DOMAIN " + pageHost);
-          break;
+          return false;
         }
-      }*/
+      }
 
       // facebook.com can request facebook.com... We want 3rd party requests
       if (requestHost !== pageHost) {
