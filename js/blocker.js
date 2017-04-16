@@ -126,7 +126,7 @@ function isAd(details) {
       var pageHost = canonicalizeHost(parseURI(currentTabUrl).hostname);
 
       
-      //THIS IS THE CODE WHICH IS BREAKING EVERYTHING -- don't know why yet
+      //Fixed - Boris
       
       console.log("Current Tab =" +currentTabUrl);
       for (urlD in allowUrlList) {
@@ -142,6 +142,7 @@ function isAd(details) {
           return false;
         }
       }
+      
 
       // facebook.com can request facebook.com... We want 3rd party requests
       if (requestHost !== pageHost) {
