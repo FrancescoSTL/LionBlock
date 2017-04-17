@@ -18485,7 +18485,6 @@ function isAd(details) {
       
       //Fixed - Boris
       
-      console.log("Current Tab =" +currentTabUrl);
       for (urlD in allowUrlList) {
         if (allowUrlList[urlD] == currentTabUrl) {
           console.log("STOPPING BLOCKING FOR PAGE " + currentTabUrl);
@@ -18494,12 +18493,13 @@ function isAd(details) {
       }
 
       for (urlD in allowDomainList) {
-        if (canonicalizeHost(parseURI(allowDomainList[urlD]).hostname) == pageHost) {
-          console.log("STOPPING BLOCKING FOR DOMAIN " + pageHost);
-          return false;
-        }
+        if (allowDomainList[urlD] !== null)
+          if (canonicalizeHost(parseURI(allowDomainList[urlD]).hostname) == pageHost) {
+            console.log("STOPPING BLOCKING FOR DOMAIN " + pageHost);
+            return false;
+          }
       }
-      
+
 
       // facebook.com can request facebook.com... We want 3rd party requests
       if (requestHost !== pageHost) {
