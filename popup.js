@@ -106,12 +106,15 @@ document.addEventListener('DOMContentLoaded', function() {
 						chrome.storage.local.set({"allowUrlList": allowUrlList });
 						chrome.runtime.sendMessage({"allowUrlList": allowUrlList });
 						$("#allowPage").removeClass("btn-danger");
+						chrome.tabs.reload();
 					} else {
 						console.log("adding " + tab[0].url + " to list");
 						allowUrlList.push(tab[0].url);
 						chrome.storage.local.set({"allowUrlList": allowUrlList });
 						chrome.runtime.sendMessage({"allowUrlList": allowUrlList });
 						$("#allowPage").addClass("btn-danger");
+						chrome.tabs.reload();
+
 					}
 				});
 			} else {
@@ -133,12 +136,15 @@ document.addEventListener('DOMContentLoaded', function() {
 						chrome.storage.local.set({"allowUrlList": allowUrlList });
 						chrome.runtime.sendMessage({"allowUrlList": allowUrlList });
 						$("#allowPage").removeClass("btn-danger");
+						chrome.tabs.reload();
 					} else {
 						console.log("adding " + tab[0].url + " to list");
 						allowUrlList.push(tab[0].url);
 						chrome.storage.local.set({"allowUrlList": allowUrlList });
 						chrome.runtime.sendMessage({"allowUrlList": allowUrlList });
 						$("#allowPage").addClass("btn-danger");
+						chrome.tabs.reload();
+
 					}
 				});
 			}
@@ -166,12 +172,15 @@ document.addEventListener('DOMContentLoaded', function() {
 						chrome.storage.local.set({"allowDomainList": allowDomainList });
 						chrome.runtime.sendMessage({"allowDomainList": allowDomainList });
 						$("#allowDomain").removeClass("btn-danger");
+						chrome.tabs.reload();
 					} else {
 						console.log("adding " + tab[0].url + " to list");
 						allowDomainList.push(tab[0].url);
 						chrome.storage.local.set({"allowDomainList": allowDomainList });
 						chrome.runtime.sendMessage({"allowDomainList": allowDomainList });
 						$("#allowDomain").addClass("btn-danger");
+						chrome.tabs.reload();
+
 					}
 				});
 			} else {
@@ -193,12 +202,15 @@ document.addEventListener('DOMContentLoaded', function() {
 						chrome.storage.local.set({"allowDomainList": allowDomainList });
 						chrome.runtime.sendMessage({"allowDomainList": allowDomainList });
 						$("#allowDomain").removeClass("btn-danger");
+						chrome.tabs.reload();
 					} else {
 						console.log("adding " + tab[0].url + " to list");
 						allowDomainList.push(tab[0].url);
 						chrome.storage.local.set({"allowDomainList": allowDomainList });
 						chrome.runtime.sendMessage({"allowDomainList": allowDomainList });
 						$("#allowDomain").addClass("btn-danger");
+						chrome.tabs.reload();
+
 					}
 				});
 			}
