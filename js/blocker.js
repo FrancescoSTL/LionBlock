@@ -1,5 +1,6 @@
 // Set of the hostnames that are going to be blocked
 var adsBlocked = 0; // ads blocked counter
+var adSize = 0;
 var blocklistSet = new Set();
 var whitelistSet = new Set();
 var currentTabURLs = {};
