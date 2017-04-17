@@ -69,8 +69,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			$("#totalBlocked").text("Total Blocked: " + 0 );
 		console.log(event.adCount);
 		});
-
-
 	});
 
 
