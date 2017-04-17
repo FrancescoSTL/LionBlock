@@ -36,13 +36,15 @@ chrome.runtime.onMessage.addListener(
       });
       console.log("sending response" + blocking);
     } else if (typeof request.allowDomainList !== 'undefined') {
+      
       allowDomainList = request.allowDomainList;
     } else if (typeof request.allowUrlList !== 'undefined') {
       allowUrlList = request.allowUrlList;
-    }
+    } 
   }
 );
 
+ 
 
 chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
   // do the blocking
@@ -56,6 +58,11 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
       adsBlocked += 1; // update total ads blocked
       //console.log("Yo we be blockin " + assetAdHost);
       //console.log(details);
+
+      chrome.storage.local.set({"adCount": adsBlocked }, function(event){
+        console.log("added");
+      });
+
     }
 
     return {
@@ -117,6 +124,10 @@ function isAd(details) {
       /* 
       TODO: We need to first check the actual website we are on (which we get from chrome.tabs). Then, check if this host is a resource of an entity. If it is, we check if the origin of the request is part of this entity's resources. If it is, we should not block them. On the contrary, blocking heeaders should happen.
       */
+      //console.log(url+"1");
+      //console.log(parseURI(url)+"2");
+      //console.log(anonicalizeHost(parseURI(url))+"3");
+      //console.log(anonicalizeHost(parseURI(url).hostname)+"4");
 
       // the site who is making the request
       var requestHost = canonicalizeHost(parseURI(url).hostname);
@@ -201,6 +212,7 @@ function isAd(details) {
 
 function parseURI(url) {
   var match = url.match(/^((https|http)?\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)(\/[^?#]*)(\?[^#]*|)(#.*|)$/);
+  
   return match && {
     protocol: match[1],
     host: match[2],

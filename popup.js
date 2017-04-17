@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	});*/
 
+
 	chrome.storage.local.get('isBlocking', function (result) {
 		blocking = result.isBlocking;
 
@@ -41,6 +42,37 @@ document.addEventListener('DOMContentLoaded', function() {
 		    }
 		});
 	});
+
+	// check ad count 
+	/*chrome.storage.local.get('adCount', function (result) {
+
+		if (result.adCount)
+			console.log(result.adCount);
+	})*/
+
+	// check the total ad blocked 
+	chrome.storage.local.get('adCount', function(event){
+		if (typeof event.adCount !== 'undefined')
+			$("#totalBlocked").text("Total Blocked: " + event.adCount );
+		else
+			$("#totalBlocked").text("Total Blocked: " + 0 );
+		console.log(event.adCount);
+	});
+
+	// every time there is a change in the storage recheck the ad count
+	chrome.storage.onChanged.addListener(function(changes, namespace) {
+
+		chrome.storage.local.get('adCount', function(event){
+		if (typeof event.adCount !== 'undefined')
+			$("#totalBlocked").text("Total Blocked: " + event.adCount );
+		else
+			$("#totalBlocked").text("Total Blocked: " + 0 );
+		console.log(event.adCount);
+		});
+
+
+	});
+
 
 	// check the allow URL list each time the popup opens to ensure we've enabled the button if need be (based upon current URL)
 	chrome.storage.local.get('allowUrlList', function (result) {
@@ -149,6 +181,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				});
 			}
 		});
+
 	});
 
 	$("#allowDomain").on('click', function(event) {
@@ -216,6 +249,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		});
 	});
+
+
 
 	function showOptions() {
 	  document.getElementById('options').style.visibility='hidden';
