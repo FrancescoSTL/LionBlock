@@ -4,7 +4,6 @@
 
 document.addEventListener('DOMContentLoaded', function() {
 	var blocking;
-
 	/*chrome.runtime.sendMessage({"blockingCheck": true }, function (response) {
 		console.log("recieved response");
 		blocking = response.isBlocking;
@@ -51,13 +50,18 @@ document.addEventListener('DOMContentLoaded', function() {
 	})*/
 
 	// check the total ad blocked 
-	chrome.storage.local.get('adCount', function(event){
-		if (typeof event.adCount !== 'undefined')
-			$("#totalBlocked").text("Total Blocked: " + event.adCount );
-		else
-			$("#totalBlocked").text("Total Blocked: " + 0 );
-		console.log(event.adCount);
-	});
+	setInterval(getOverview, 1000);
+
+	function getOverview() {
+		chrome.storage.local.get('adCount', function(event){
+			if (typeof event.adCount !== 'undefined')
+				$("#totalBlocked").text("Total Blocked: " + event.adCount );
+			else
+				$("#totalBlocked").text("Total Blocked: " + 0 );
+			console.log(event.adCount);
+		});
+	}
+	
 
 	// every time there is a change in the storage recheck the ad count
 	chrome.storage.onChanged.addListener(function(changes, namespace) {
@@ -103,11 +107,11 @@ document.addEventListener('DOMContentLoaded', function() {
 			chrome.tabs.query({"active": true}, function (tab) {				
 				for (url in allowList) {
 					//console.log("checking " + parseURI(tab[0].url).host + " and " + allowList[url]);
-					if (allowList[url] == tab[0].url) {
-						console.log("domain match " + allowList[url] + " " + tab[0].url);
+					if (parseURI(allowList[url]).hostname == parseURI(tab[0].url).hostname) {
+						console.log("domain match " + parseURI(allowList[url]).hostname + " " + parseURI(tab[0].url).hostname);
 						$("#allowDomain").addClass("btn-danger");
 					} else {
-						console.log("no domain match " +allowList[url] + " " + tab[0].url);
+						console.log("no domain match " + parseURI(allowList[url]).hostname + " " + parseURI(tab[0].url).hostname);
 					}
 				}
 			});
@@ -261,5 +265,19 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 
 	$('.carousel').carousel('pause')
+
+	function parseURI(url) {
+	  var match = url.match(/^((https|http)?\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)(\/[^?#]*)(\?[^#]*|)(#.*|)$/);
+	  
+	  return match && {
+	    protocol: match[1],
+	    host: match[2],
+	    hostname: match[3],
+	    port: match[4],
+	    pathname: match[5],
+	    search: match[6],
+	    hash: match[7]
+	  }
+	} // end parse url
 
 });

@@ -18415,11 +18415,9 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
       adsBlocked += 1; // update total ads blocked
       //console.log("Yo we be blockin " + assetAdHost);
       //console.log(details);
-
       chrome.storage.local.set({"adCount": adsBlocked }, function(event){
         console.log("added");
       });
-
     }
 
     return {

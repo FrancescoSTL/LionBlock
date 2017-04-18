@@ -1,6 +1,5 @@
 // Set of the hostnames that are going to be blocked
 var adsBlocked = 0; // ads blocked counter
-var adSize = 0;
 var blocklistSet = new Set();
 var whitelistSet = new Set();
 var currentTabURLs = {};
@@ -59,11 +58,9 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
       adsBlocked += 1; // update total ads blocked
       //console.log("Yo we be blockin " + assetAdHost);
       //console.log(details);
-
       chrome.storage.local.set({"adCount": adsBlocked }, function(event){
         console.log("added");
       });
-
     }
 
     return {
