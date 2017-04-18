@@ -1,15 +1,11 @@
 
 body {
-
-  font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-size: 100%;
-  width: 250px;
+  width: 240px;
   display:block;
   overflow:auto;
-  background-color: rgba(0, 0, 0, .05);
-  /* max-width: 400px;
-  #f8f3de
-  max-height: 400px;*/
+  background-color: #fafafa;
 }
 
 #status {
@@ -21,13 +17,13 @@ body {
 
 
 hr { 
-    display: block;
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
-    margin-left: auto;
-    margin-right: auto;
-    border-style: inset;
-    border-width: 1px;
+  display: block;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  margin-left: auto;
+  margin-right: auto;
+  border-style: inset;
+  border-width: 1px;
   width: 100%
 }
 
@@ -42,9 +38,18 @@ li {
 
 }
 
-h1, h2, h4, h5 , h6 {
-  color:  #808080;
-  
+h1  {
+color: #efefef;
+}
+
+h2, h4, h5 , h6 {
+  color:  #8d8d8d;
+
+}
+
+p {
+  font-size: 11px;
+  color: #616161;
 }
 /* This is for the Statistics Label */
 .stats{
@@ -52,13 +57,31 @@ h1, h2, h4, h5 , h6 {
   font-weight: bold;
 }
 .brand {
-
+  margin-top: 2px;
+  margin-bottom: 5px;
+  font-size: 30px;
+  background-color: #373737;
+}
+.brand img{
+  max-height: 80px;
   text-align: center;
+  width: 70%;
+  height: auto;
+}
+
+
+.header {
+    background-color: #373737;
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    text-align: center;
 }
 
 .adBlocker {
   text-align: center;
-  color: black;
+  color: white;
+  padding-bottom: 3px;
 }
 
 h2 {
@@ -85,25 +108,30 @@ h3 {
   .toggle.ios .toggle-handle { border-radius: 20px; }
 
 .main-container {
+
   height: 25%;
 }
 
 .info-container {
-  margin: 15px;
   height: 25%;
 }
+
+.dropdown-container {
+
+}
+
 .option-container {
   display:block;
   overflow: hidden;
   height:0px;
-
-    -webkit-transition: height 0.3s ease;
-     -moz-transition: height 0.3s ease;
-          transition: height 0.3s ease;
-  /*visibility: hidden;*/
+  -webkit-transition: height 0.25s ease;
+  -moz-transition: height 0.25s ease;
+  transition: height 0.25s ease;
 }
 
-.option-container.open { height: 275px;}
+.option-container.open { 
+  height: 220px;
+}
 
 #click-tag {
   left: 5px;
@@ -123,7 +151,9 @@ h3 {
 }
 
 .glyphicon {
-  font-size: 17px;
+  font-size: 19px;
+  max-height: 10%;
+  padding-top: 5px;
 }
 
 .carousel-control.left {
@@ -135,6 +165,7 @@ h3 {
 }
 
 .infoText {
+  margin-top: 4px; 
   text-align: justify;
 
 }
@@ -143,22 +174,27 @@ h3 {
   
 }
 .carousel-control {
-
-  
+  text-shadow: 0 2px 5px rgba(0,0,0,1);
 }
+
 .carousel-control .right .glyphicon .glyphicon-share-alt .movement{
     top: 200px;
   
 }
 
+
+.option{
+ background-color: #90caf9;
+}
+
 .btn:active {
 
- background-color: #757575;
+ background-color: #f5f5f5;
 }
 
 .btn:hover {
   
-  background-color: #757575;
+  background-color: #90caf9;
   
 }
 /*This is to move the Github Logo*/
@@ -172,10 +208,18 @@ h3 {
   padding: 1px;
 }
 
+
+
 .option-title {
-  padding-left: 30%;
+  text-align: center;
+  margin: 5px;
 }
 
-.glyphicon {
-  max-height: 10%;
+.statistic-title {
+  text-align: center;
+  margin: 0px;
+}
+
+.team-title {
+  text-align: left;
 }
