@@ -1,5 +1,6 @@
 // Set of the hostnames that are going to be blocked
 var adsBlocked = 0; // ads blocked counter
+var adSize = 0;
 var blocklistSet = new Set();
 var whitelistSet = new Set();
 var currentTabURLs = {};
@@ -10,6 +11,8 @@ var {
   canonicalizeHost
 } = require('../js/canonicalize.js');
 var blocking = false;
+var allowUrlList = [];
+var allowDomainList = [];
 
 // NOTE: in isAd in SiteSonar HOST is the url in which all the ads are being loaded into and ORIGIN is the url from where the ad is being triggered. Example, the javascript file that generates the request.
 
@@ -33,10 +36,16 @@ chrome.runtime.onMessage.addListener(
         "isBlocking": blocking
       });
       console.log("sending response" + blocking);
-    }
+    } else if (typeof request.allowDomainList !== 'undefined') {
+      
+      allowDomainList = request.allowDomainList;
+    } else if (typeof request.allowUrlList !== 'undefined') {
+      allowUrlList = request.allowUrlList;
+    } 
   }
 );
 
+ 
 
 chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
   // do the blocking
@@ -50,6 +59,11 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
       adsBlocked += 1; // update total ads blocked
       //console.log("Yo we be blockin " + assetAdHost);
       //console.log(details);
+
+      chrome.storage.local.set({"adCount": adsBlocked }, function(event){
+        console.log("added");
+      });
+
     }
 
     return {
@@ -64,11 +78,21 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
 
 
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+  currentTabURLs[tabId] = tab.url;
   /*console.log("------------------");
   for(var tabnum in currentTabURLs) {
     console.log(currentTabURLs[tabnum]);
   }*/
-  currentTabURLs[tabId] = tab.url;
+});
+
+chrome.tabs.onReplaced.addListener(function (addedTabId, removedTabId) {
+  chrome.tabs.get(addedTabId, function (tab) {
+    currentTabURLs[addedTabId] = tab.url;
+    /*console.log("------------------");
+    for(var tabnum in currentTabURLs) {
+      console.log(currentTabURLs[tabnum]);
+    }*/
+  });
 });
 
 chrome.tabs.onRemoved.addListener(function (tabId, removeInfo) {
@@ -101,6 +125,10 @@ function isAd(details) {
       /* 
       TODO: We need to first check the actual website we are on (which we get from chrome.tabs). Then, check if this host is a resource of an entity. If it is, we check if the origin of the request is part of this entity's resources. If it is, we should not block them. On the contrary, blocking heeaders should happen.
       */
+      //console.log(url+"1");
+      //console.log(parseURI(url)+"2");
+      //console.log(anonicalizeHost(parseURI(url))+"3");
+      //console.log(anonicalizeHost(parseURI(url).hostname)+"4");
 
       // the site who is making the request
       var requestHost = canonicalizeHost(parseURI(url).hostname);
@@ -108,6 +136,25 @@ function isAd(details) {
       // this is the page we are on 
       //var pageHost = canonicalizeHost(parseURI(currentTabUrl).hostname);
       var pageHost = canonicalizeHost(parseURI(currentTabUrl).hostname);
+
+      
+      //Fixed - Boris
+      
+      for (urlD in allowUrlList) {
+        if (allowUrlList[urlD] == currentTabUrl) {
+          console.log("STOPPING BLOCKING FOR PAGE " + currentTabUrl);
+          return false;
+        }
+      }
+
+      for (urlD in allowDomainList) {
+        if (allowDomainList[urlD] !== null)
+          if (canonicalizeHost(parseURI(allowDomainList[urlD]).hostname) == pageHost) {
+            console.log("STOPPING BLOCKING FOR DOMAIN " + pageHost);
+            return false;
+          }
+      }
+
 
       // facebook.com can request facebook.com... We want 3rd party requests
       if (requestHost !== pageHost) {
@@ -122,7 +169,7 @@ function isAd(details) {
             requestIsEntityResource = entity.resources.indexOf(host) > -1;
             // if found, just stop looping
             if (requestIsEntityResource) {
-              console.log("our request host is a resource for the entity " + entityName + " for " + requestHost + " with page host " + pageHost);
+              //console.log("our request host is a resource for the entity " + entityName + " for " + requestHost + " with page host " + pageHost);
               break;
             }
           }
@@ -132,7 +179,7 @@ function isAd(details) {
             pageIsEntityProperty = entity.properties.indexOf(origin) > -1;
             // if found, just stop looping
             if (pageIsEntityProperty) {
-              console.log("our page host is a property for the entity " + entityName + " for " + pageHost + " with request host " + requestHost);
+              //console.log("our page host is a property for the entity " + entityName + " for " + pageHost + " with request host " + requestHost);
               break;
             }
           }
@@ -160,12 +207,13 @@ function isAd(details) {
         }
       }
 
-      console.log(parseURI(url).hostname + " is not an ad");
+      //console.log(parseURI(url).hostname + " is not an ad");
       return false; 
 }
 
 function parseURI(url) {
   var match = url.match(/^((https|http)?\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)(\/[^?#]*)(\?[^#]*|)(#.*|)$/);
+  
   return match && {
     protocol: match[1],
     host: match[2],
