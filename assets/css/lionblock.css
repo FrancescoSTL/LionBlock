@@ -1,11 +1,16 @@
-
 body {
   font-family: 'Roboto', sans-serif;
   font-size: 100%;
   width: 240px;
-  display:block;
-  overflow:auto;
+  display: block;
+  overflow: auto;
   background-color: #fafafa;
+}
+
+.fa {
+  font-size: 14px;
+  padding-right: 5px;
+  color: #fff;
 }
 
 #status {
@@ -15,8 +20,7 @@ body {
   overflow: hidden;
 }
 
-
-hr { 
+hr {
   display: block;
   margin-top: 0.5em;
   margin-bottom: 0.5em;
@@ -27,41 +31,45 @@ hr {
   width: 100%
 }
 
-
 li {
   list-style-type: none;
 }
 
 .caret-right {
-
-    border-bottom: 4px solid transparent;
-
+  border-bottom: 4px solid transparent;
 }
 
-h1  {
-color: #efefef;
+h1 {
+  color: #efefef;
 }
 
-h2, h4, h5 , h6 {
-  color:  #8d8d8d;
-
+h2,
+h4,
+h5,
+h6 {
+  color: #8d8d8d;
 }
 
 p {
   font-size: 11px;
   color: #616161;
 }
+
+
 /* This is for the Statistics Label */
-.stats{
-  color: #808080; 
+
+.stats {
+  color: #808080;
   font-weight: bold;
 }
+
 .brand {
   margin-top: 5px;
   margin-bottom: 5px;
   font-size: 30px;
   background-color: #373737;
 }
+
 .brand-info {
   margin-top: 5px;
   margin-bottom: 5px;
@@ -72,21 +80,21 @@ p {
   display: flex;
   align-items: center;
 }
-.brand img{
+
+.brand img {
   max-height: 80px;
   text-align: center;
   width: 70%;
   height: auto;
 }
 
-
 .header {
-    background-color: #373737;
-    width: 100%;
-    padding-top: 10px;
-    padding-bottom: 5px;
-    text-align: center;
-    height: 85px;
+  background-color: #373737;
+  width: 100%;
+  padding-top: 10px;
+  padding-bottom: 5px;
+  text-align: center;
+  height: 85px;
 }
 
 .adBlocker {
@@ -99,27 +107,28 @@ h2 {
   font-size: 18px;
   font-weight: bold;
 }
+
 h3 {
   font-size: 14px;
   margin-left: 15px;
-  
 }
-
-.checkbox {
-  left: 50px;
-}
-
 
 .btn-group-vertical {
   display: block;
   margin: 10px;
 }
 
-.toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 20px; }
-  .toggle.ios .toggle-handle { border-radius: 20px; }
+.toggle.ios,
+.toggle-on.ios,
+.toggle-off.ios {
+  border-radius: 20px;
+}
+
+.toggle.ios .toggle-handle {
+  border-radius: 20px;
+}
 
 .main-container {
-
   height: 25%;
 }
 
@@ -128,20 +137,39 @@ h3 {
 }
 
 .dropdown-container {
-
+  cursor: pointer;
 }
 
 .option-container {
-  display:block;
+  display: block;
   overflow: hidden;
-  height:0px;
+  height: 0px;
   -webkit-transition: height 0.25s ease;
   -moz-transition: height 0.25s ease;
   transition: height 0.25s ease;
 }
 
-.option-container.open { 
-  height: 220px;
+.option-container.open {
+  height: 200px;
+}
+
+.footer {
+  background-color: #616161;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  font-weight: 200;
+}
+
+.footer-content {
+  padding-top: 6px; 
+  font-size: 10px;
+  font-weight: 100;
+  color: #e0e0e0;
+}
+
+#totalBlocked {
+  color: #b71c1c;
 }
 
 #click-tag {
@@ -149,21 +177,25 @@ h3 {
   top: 1px;
 }
 
-.flip{
-    -moz-transition: all 0.3s linear;
-    -webkit-transition: all 0.3s linear;
-    transition: all 0.3s linear;
+.flip {
+  -moz-transition: all 0.3s linear;
+  -webkit-transition: all 0.3s linear;
+  transition: all 0.3s linear;
 }
 
-.flip.down{
-    -moz-transform:rotate(180deg);
-    -webkit-transform:rotate(180deg);
-    transform:rotate(180deg);
+.flip.down {
+  -moz-transform: rotate(180deg);
+  -webkit-transform: rotate(180deg);
+  transform: rotate(180deg);
 }
 
 .icon {
   font-size: 20px;
   margin-top: 8px;
+}
+
+.checkbox {
+  left: 50px;
 }
 
 .carousel-control.left {
@@ -177,36 +209,25 @@ h3 {
 }
 
 .infoText {
-  margin-top: 4px; 
+  margin-top: 4px;
   text-align: justify;
-
 }
-#carouselLeftMove{
+
+#carouselLeftMove {
   position: fixed;
-  
 }
+
 .carousel-control {
-  text-shadow: 0 2px 5px rgba(0,0,0,1);
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 1);
 }
 
-
-.option{
- background-color: #90caf9;
-}
-
-}
-/*This is to move the Github Logo*/
-.logoMove{
-  position: relative;    
-  top: -2px;
-  
+.option {
+  background-color: #90caf9;
 }
 
 .btn-group {
   padding: 1px;
 }
-
-
 
 .option-title {
   text-align: center;

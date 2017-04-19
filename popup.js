@@ -55,9 +55,9 @@ document.addEventListener('DOMContentLoaded', function() {
 	function getOverview() {
 		chrome.storage.local.get('adCount', function(event){
 			if (typeof event.adCount !== 'undefined')
-				$("#totalBlocked").text("Total Ads Blocked: " + event.adCount );
+				$("#totalBlocked").text(event.adCount);
 			else
-				$("#totalBlocked").text("Total Ads Blocked: " + 0 );
+				$("#totalBlocked").text("0");
 			//console.log(event.adCount);
 		});
 	}
@@ -68,9 +68,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		chrome.storage.local.get('adCount', function(event){
 		if (typeof event.adCount !== 'undefined')
-			$("#totalBlocked").text("Total Ads Blocked: " + event.adCount );
+			$("#totalBlocked").text(event.adCount);
 		else
-			$("#totalBlocked").text("Total Ads Blocked: " + 0 );
+			$("#totalBlocked").text(0);
 		//console.log(event.adCount);
 		});
 	});
