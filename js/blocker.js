@@ -44,13 +44,11 @@ chrome.runtime.onMessage.addListener(
   }
 );
 
- 
-
 chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
   // do the blocking
 
   if (blocking) {
-    var areWeCancelling; // boolean checking blocking status
+    var areWeCancelling = false; // boolean checking blocking status
     var assetAdHost = canonicalizeHost(parseURI(details.url).hostname);
 
     if (isAd(details)) {
@@ -59,11 +57,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
       adsBlocked += 1; // update total ads blocked
       //console.log("Yo we be blockin " + assetAdHost);
       //console.log(details);
-      chrome.storage.local.set({"adCount": adsBlocked }, function(event){
-        console.log("added");
-      });
-    } else {
-      console.log("we are not blocking " +details.url)
+      chrome.storage.local.set({"adCount": adsBlocked });
     }
 
     return {
@@ -73,7 +67,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
 
   return;
 }, {
-  urls: ["*://*/*"]
+  urls: ["<all_urls>"]
 }, ["blocking", "requestHeaders"]);
 
 
@@ -113,7 +107,7 @@ function isAd(details) {
   var currentTabUrl;
 
   // if the tabid is -1, it isn't from a tab (from a browser) so we know it isn't an ad
-  if (details.tabId === -1) {
+  if (details.tabId == -1 || details.type == "main_frame") {
     return false;
   }
 
@@ -232,6 +226,8 @@ function parseURI(url) {
  * parses the disconnect list and eliminates unnecessary categories
  */
 function parseJSON() {
+
+  console.log("running")
 
   //delete disconnectJSON.categories['Content'];
   //delete disconnectJSON.categories['Disconnect'];

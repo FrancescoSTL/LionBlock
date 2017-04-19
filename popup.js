@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				$("#totalBlocked").text("Total Ads Blocked: " + event.adCount );
 			else
 				$("#totalBlocked").text("Total Ads Blocked: " + 0 );
-			console.log(event.adCount);
+			//console.log(event.adCount);
 		});
 	}
 	
@@ -68,10 +68,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		chrome.storage.local.get('adCount', function(event){
 		if (typeof event.adCount !== 'undefined')
-			$("#totalBlocked").text("Total Blocked: " + event.adCount );
+			$("#totalBlocked").text("Total Ads Blocked: " + event.adCount );
 		else
-			$("#totalBlocked").text("Total Blocked: " + 0 );
-		console.log(event.adCount);
+			$("#totalBlocked").text("Total Ads Blocked: " + 0 );
+		//console.log(event.adCount);
 		});
 	});
 
@@ -81,17 +81,17 @@ document.addEventListener('DOMContentLoaded', function() {
 		if (result.allowUrlList) {
 			var allowList = result.allowUrlList;
 
-			console.log("allowUrlList: " + allowList);
+			//console.log("allowUrlList: " + allowList);
 
 			chrome.tabs.query({"active": true}, function (tab) {				
 				for (url in allowList) {
 					//console.log("checking " + tab[0].url + " and " + allowList[url]);
 					if (allowList[url] == tab[0].url) {
-						console.log("page match " + allowList[url] + " " + tab[0].url);
+						//console.log("page match " + allowList[url] + " " + tab[0].url);
 						$("#allowPage").addClass("btn-danger");
-					} else {
+					} /*else {
 						console.log("no page match " + allowList[url] + " " + tab[0].url);
-					}
+					}*/
 				}
 			});
 		}
@@ -102,24 +102,32 @@ document.addEventListener('DOMContentLoaded', function() {
 		if (result.allowDomainList) {
 			var allowList = result.allowDomainList;
 
-			console.log("allowDomainList is: " + allowList);
+			//console.log("allowDomainList is: " + allowList);
 
 			chrome.tabs.query({"active": true}, function (tab) {				
 				for (url in allowList) {
 					//console.log("checking " + parseURI(tab[0].url).host + " and " + allowList[url]);
 					if (parseURI(allowList[url]).hostname == parseURI(tab[0].url).hostname) {
-						console.log("domain match " + parseURI(allowList[url]).hostname + " " + parseURI(tab[0].url).hostname);
+						//console.log("domain match " + parseURI(allowList[url]).hostname + " " + parseURI(tab[0].url).hostname);
 						$("#allowDomain").addClass("btn-danger");
-					} else {
+						$("#allowPage").addClass("disabled");
+						if($("#allowPage").hasClass("btn-danger")) {
+							$("#allowPage").removeClass("btn-danger");
+						}
+					}/* else {
 						console.log("no domain match " + parseURI(allowList[url]).hostname + " " + parseURI(tab[0].url).hostname);
-					}
+					}*/
 				}
 			});
 		}
 	});
 
 	$("#allowPage").on('click', function(event) {
-		console.log("clicked");
+		if ($("#allowPage").hasClass("disabled")) {
+			return;
+		}
+
+		//console.log("clicked");
 		chrome.storage.local.get('allowUrlList', function (result) {
 			if (typeof result.allowUrlList != 'undefined') {
 				var allowUrlList = result.allowUrlList;
@@ -142,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						$("#allowPage").removeClass("btn-danger");
 						chrome.tabs.reload();
 					} else {
-						console.log("adding " + tab[0].url + " to list");
+						// console.log("adding " + tab[0].url + " to list");
 						allowUrlList.push(tab[0].url);
 						chrome.storage.local.set({"allowUrlList": allowUrlList });
 						chrome.runtime.sendMessage({"allowUrlList": allowUrlList });
@@ -172,7 +180,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						$("#allowPage").removeClass("btn-danger");
 						chrome.tabs.reload();
 					} else {
-						console.log("adding " + tab[0].url + " to list");
+						//console.log("adding " + tab[0].url + " to list");
 						allowUrlList.push(tab[0].url);
 						chrome.storage.local.set({"allowUrlList": allowUrlList });
 						chrome.runtime.sendMessage({"allowUrlList": allowUrlList });
@@ -207,13 +215,21 @@ document.addEventListener('DOMContentLoaded', function() {
 						chrome.storage.local.set({"allowDomainList": allowDomainList });
 						chrome.runtime.sendMessage({"allowDomainList": allowDomainList });
 						$("#allowDomain").removeClass("btn-danger");
+						if($("#allowPage").hasClass("disabled")) {
+							$("#allowPage").removeClass("disabled");
+						}
 						chrome.tabs.reload();
 					} else {
-						console.log("adding " + tab[0].url + " to list");
+						//console.log("adding " + tab[0].url + " to list");
 						allowDomainList.push(tab[0].url);
 						chrome.storage.local.set({"allowDomainList": allowDomainList });
 						chrome.runtime.sendMessage({"allowDomainList": allowDomainList });
 						$("#allowDomain").addClass("btn-danger");
+						$("#allowPage").addClass("disabled");
+						if($("#allowPage").hasClass("btn-danger")) {
+							$("#allowPage").removeClass("btn-danger");
+						}
+
 						chrome.tabs.reload();
 
 					}
@@ -237,13 +253,21 @@ document.addEventListener('DOMContentLoaded', function() {
 						chrome.storage.local.set({"allowDomainList": allowDomainList });
 						chrome.runtime.sendMessage({"allowDomainList": allowDomainList });
 						$("#allowDomain").removeClass("btn-danger");
+						if($("#allowPage").hasClass("disabled")) {
+							$("#allowPage").removeClass("disabled");
+						}
 						chrome.tabs.reload();
 					} else {
-						console.log("adding " + tab[0].url + " to list");
+						//console.log("adding " + tab[0].url + " to list");
 						allowDomainList.push(tab[0].url);
 						chrome.storage.local.set({"allowDomainList": allowDomainList });
 						chrome.runtime.sendMessage({"allowDomainList": allowDomainList });
 						$("#allowDomain").addClass("btn-danger");
+						$("#allowPage").addClass("disabled");
+						if($("#allowPage").hasClass("btn-danger")) {
+							$("#allowPage").removeClass("btn-danger");
+						}
+
 						chrome.tabs.reload();
 
 					}
