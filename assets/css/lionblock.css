@@ -194,15 +194,6 @@ h3 {
  background-color: #90caf9;
 }
 
-.btn:active {
-
- background-color: #f5f5f5;
-}
-
-.btn:hover {
-  
-  background-color: #90caf9;
-  
 }
 /*This is to move the Github Logo*/
 .logoMove{
