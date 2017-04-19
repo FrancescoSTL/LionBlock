@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	});*/
 
+
 	chrome.storage.local.get('isBlocking', function (result) {
 		blocking = result.isBlocking;
 
@@ -41,6 +42,213 @@ document.addEventListener('DOMContentLoaded', function() {
 		    }
 		});
 	});
+
+	// check ad count 
+	/*chrome.storage.local.get('adCount', function (result) {
+
+		if (result.adCount)
+			console.log(result.adCount);
+	})*/
+
+	// check the total ad blocked 
+	chrome.storage.local.get('adCount', function(event){
+		if (typeof event.adCount !== 'undefined')
+			$("#totalBlocked").text("Total Blocked: " + event.adCount );
+		else
+			$("#totalBlocked").text("Total Blocked: " + 0 );
+		console.log(event.adCount);
+	});
+
+	// every time there is a change in the storage recheck the ad count
+	chrome.storage.onChanged.addListener(function(changes, namespace) {
+
+		chrome.storage.local.get('adCount', function(event){
+		if (typeof event.adCount !== 'undefined')
+			$("#totalBlocked").text("Total Blocked: " + event.adCount );
+		else
+			$("#totalBlocked").text("Total Blocked: " + 0 );
+		console.log(event.adCount);
+		});
+	});
+
+
+	// check the allow URL list each time the popup opens to ensure we've enabled the button if need be (based upon current URL)
+	chrome.storage.local.get('allowUrlList', function (result) {
+		if (result.allowUrlList) {
+			var allowList = result.allowUrlList;
+
+			console.log("allowUrlList: " + allowList);
+
+			chrome.tabs.query({"active": true}, function (tab) {				
+				for (url in allowList) {
+					//console.log("checking " + tab[0].url + " and " + allowList[url]);
+					if (allowList[url] == tab[0].url) {
+						console.log("page match " + allowList[url] + " " + tab[0].url);
+						$("#allowPage").addClass("btn-danger");
+					} else {
+						console.log("no page match " + allowList[url] + " " + tab[0].url);
+					}
+				}
+			});
+		}
+	});
+
+	// check the allow URL list each time the popup opens to ensure we've enabled the button if need be (based upon current URL)
+	chrome.storage.local.get('allowDomainList', function (result) {
+		if (result.allowDomainList) {
+			var allowList = result.allowDomainList;
+
+			console.log("allowDomainList is: " + allowList);
+
+			chrome.tabs.query({"active": true}, function (tab) {				
+				for (url in allowList) {
+					//console.log("checking " + parseURI(tab[0].url).host + " and " + allowList[url]);
+					if (allowList[url] == tab[0].url) {
+						console.log("domain match " + allowList[url] + " " + tab[0].url);
+						$("#allowDomain").addClass("btn-danger");
+					} else {
+						console.log("no domain match " +allowList[url] + " " + tab[0].url);
+					}
+				}
+			});
+		}
+	});
+
+	$("#allowPage").on('click', function(event) {
+		console.log("clicked");
+		chrome.storage.local.get('allowUrlList', function (result) {
+			if (typeof result.allowUrlList != 'undefined') {
+				var allowUrlList = result.allowUrlList;
+
+				chrome.tabs.query({"active": true}, function (tab) {
+					var isCurrAllowed = false;
+					var allowedIndex = -1;
+					for (url in allowUrlList) {
+						if (allowUrlList[url] == tab[0].url) {
+							isCurrAllowed = true;
+							allowedIndex = url;
+							break;
+						}
+					}
+
+					if (isCurrAllowed) {
+						allowUrlList[allowedIndex] = null;
+						chrome.storage.local.set({"allowUrlList": allowUrlList });
+						chrome.runtime.sendMessage({"allowUrlList": allowUrlList });
+						$("#allowPage").removeClass("btn-danger");
+						chrome.tabs.reload();
+					} else {
+						console.log("adding " + tab[0].url + " to list");
+						allowUrlList.push(tab[0].url);
+						chrome.storage.local.set({"allowUrlList": allowUrlList });
+						chrome.runtime.sendMessage({"allowUrlList": allowUrlList });
+						$("#allowPage").addClass("btn-danger");
+						chrome.tabs.reload();
+
+					}
+				});
+			} else {
+				var allowUrlList = [];
+
+				chrome.tabs.query({"active": true}, function (tab) {
+					var isCurrAllowed = false;
+					var allowedIndex = -1;
+					for (url in allowUrlList) {
+						if (allowUrlList[url] == tab[0].url) {
+							isCurrAllowed = true;
+							allowedIndex = url;
+							break;
+						}
+					}
+
+					if (isCurrAllowed) {
+						allowUrlList[allowedIndex] = null;
+						chrome.storage.local.set({"allowUrlList": allowUrlList });
+						chrome.runtime.sendMessage({"allowUrlList": allowUrlList });
+						$("#allowPage").removeClass("btn-danger");
+						chrome.tabs.reload();
+					} else {
+						console.log("adding " + tab[0].url + " to list");
+						allowUrlList.push(tab[0].url);
+						chrome.storage.local.set({"allowUrlList": allowUrlList });
+						chrome.runtime.sendMessage({"allowUrlList": allowUrlList });
+						$("#allowPage").addClass("btn-danger");
+						chrome.tabs.reload();
+
+					}
+				});
+			}
+		});
+
+	});
+
+	$("#allowDomain").on('click', function(event) {
+		chrome.storage.local.get('allowDomainList', function (result) {
+			if (typeof result.allowDomainList != 'undefined') {
+				var allowDomainList = result.allowDomainList;
+
+				chrome.tabs.query({"active": true}, function (tab) {
+					var isCurrAllowed = false;
+					var allowedIndex = -1;
+					for (url in allowDomainList) {
+						if (allowDomainList[url] == tab[0].url) {
+							isCurrAllowed = true;
+							allowedIndex = url;
+							break;
+						}
+					}
+
+					if (isCurrAllowed) {
+						allowDomainList[allowedIndex] = null;
+						chrome.storage.local.set({"allowDomainList": allowDomainList });
+						chrome.runtime.sendMessage({"allowDomainList": allowDomainList });
+						$("#allowDomain").removeClass("btn-danger");
+						chrome.tabs.reload();
+					} else {
+						console.log("adding " + tab[0].url + " to list");
+						allowDomainList.push(tab[0].url);
+						chrome.storage.local.set({"allowDomainList": allowDomainList });
+						chrome.runtime.sendMessage({"allowDomainList": allowDomainList });
+						$("#allowDomain").addClass("btn-danger");
+						chrome.tabs.reload();
+
+					}
+				});
+			} else {
+				var allowDomainList = [];
+
+				chrome.tabs.query({"active": true}, function (tab) {
+					var isCurrAllowed = false;
+					var allowedIndex = -1;
+					for (url in allowDomainList) {
+						if (allowDomainList[url] == tab[0].url) {
+							isCurrAllowed = true;
+							allowedIndex = url;
+							break;
+						}
+					}
+
+					if (isCurrAllowed) {
+						allowDomainList[allowedIndex] = null;
+						chrome.storage.local.set({"allowDomainList": allowDomainList });
+						chrome.runtime.sendMessage({"allowDomainList": allowDomainList });
+						$("#allowDomain").removeClass("btn-danger");
+						chrome.tabs.reload();
+					} else {
+						console.log("adding " + tab[0].url + " to list");
+						allowDomainList.push(tab[0].url);
+						chrome.storage.local.set({"allowDomainList": allowDomainList });
+						chrome.runtime.sendMessage({"allowDomainList": allowDomainList });
+						$("#allowDomain").addClass("btn-danger");
+						chrome.tabs.reload();
+
+					}
+				});
+			}
+		});
+	});
+
+
 
 	function showOptions() {
 	  document.getElementById('options').style.visibility='hidden';
