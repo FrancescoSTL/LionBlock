@@ -57,10 +57,20 @@ p {
   font-weight: bold;
 }
 .brand {
-  margin-top: 2px;
+  margin-top: 5px;
   margin-bottom: 5px;
   font-size: 30px;
   background-color: #373737;
+}
+.brand-info {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-size: 30px;
+  background-color: #373737;
+  min-height: 100%;
+  min-width: 100%;
+  display: flex;
+  align-items: center;
 }
 .brand img{
   max-height: 80px;
@@ -76,6 +86,7 @@ p {
     padding-top: 10px;
     padding-bottom: 5px;
     text-align: center;
+    height: 85px;
 }
 
 .adBlocker {
@@ -150,18 +161,19 @@ h3 {
     transform:rotate(180deg);
 }
 
-.glyphicon {
-  font-size: 19px;
-  max-height: 10%;
-  padding-top: 5px;
+.icon {
+  font-size: 20px;
+  margin-top: 8px;
 }
 
 .carousel-control.left {
   background: none;
+  max-height: 30px;
 }
 
 .carousel-control.right {
   background: none;
+  max-height: 15%;
 }
 
 .infoText {
@@ -177,25 +189,11 @@ h3 {
   text-shadow: 0 2px 5px rgba(0,0,0,1);
 }
 
-.carousel-control .right .glyphicon .glyphicon-share-alt .movement{
-    top: 200px;
-  
-}
-
 
 .option{
  background-color: #90caf9;
 }
 
-.btn:active {
-
- background-color: #f5f5f5;
-}
-
-.btn:hover {
-  
-  background-color: #90caf9;
-  
 }
 /*This is to move the Github Logo*/
 .logoMove{
