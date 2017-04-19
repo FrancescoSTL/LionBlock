@@ -54,6 +54,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
     var assetAdHost = canonicalizeHost(parseURI(details.url).hostname);
 
     if (isAd(details)) {
+      //console.log("we are blocking " + details.url)
       areWeCancelling = true;
       adsBlocked += 1; // update total ads blocked
       //console.log("Yo we be blockin " + assetAdHost);
@@ -61,6 +62,8 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
       chrome.storage.local.set({"adCount": adsBlocked }, function(event){
         console.log("added");
       });
+    } else {
+      console.log("we are not blocking " +details.url)
     }
 
     return {
@@ -239,22 +242,22 @@ function parseJSON() {
   // parse our disconnect JSON into a set where we only include the hostname and subdomain urls
   for (var category in disconnectJSON.categories) {
     //  Advertising, Content ,Analytics, Social, Disconnect
-    //if (category != "Content" && category != "Disconnect") { console.log(category);
-    for (var network in disconnectJSON.categories[category]) {
-      for (var hostname in disconnectJSON.categories[category][network]) {
-        // 2leep.com , 33Across , 4INFO ,4mads ...... and so on
-        blocklistSet.add(hostname); // add to the set
-        for (var subDomain in disconnectJSON.categories[category][network][hostname]) {
-          // gets the subdomain as http://2leep.com/ , http://33across.com/ , http://www.4info.com/
-          for (var entitySubDomain in disconnectJSON.categories[category][network][hostname][subDomain]) {
-            // gets wierd random numbers
-            blocklistSet.add(disconnectJSON.categories[category][network][hostname][subDomain][entitySubDomain]);
+    if (category != "Content") {
+      for (var network in disconnectJSON.categories[category]) {
+        for (var hostname in disconnectJSON.categories[category][network]) {
+          // 2leep.com , 33Across , 4INFO ,4mads ...... and so on
+          blocklistSet.add(hostname); // add to the set
+          for (var subDomain in disconnectJSON.categories[category][network][hostname]) {
+            // gets the subdomain as http://2leep.com/ , http://33across.com/ , http://www.4info.com/
+            for (var entitySubDomain in disconnectJSON.categories[category][network][hostname][subDomain]) {
+              // gets wierd random numbers
+              blocklistSet.add(disconnectJSON.categories[category][network][hostname][subDomain][entitySubDomain]);
+            }
           }
         }
       }
     }
   }
-  //}
 } // end parse JSON
 
 /*
