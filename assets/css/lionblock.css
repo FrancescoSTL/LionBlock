@@ -132,11 +132,11 @@ h3 {
   height: 25%;
 }
 
-.info-container {
-  height: 25%;
+.dropdown-container {
+  cursor: pointer;
 }
 
-.dropdown-container {
+.infodropdown-container {
   cursor: pointer;
 }
 
@@ -151,6 +151,18 @@ h3 {
 
 .option-container.open {
   height: 200px;
+}
+
+.teaminfo-container {
+  display: block;
+  overflow: hidden;
+  height: 0px;
+  -webkit-transition: height 0.25s ease;
+  -moz-transition: height 0.25s ease;
+  transition: height 0.25s ease;
+}
+.teaminfo-container.open {
+  height: 101px;
 }
 
 .footer {
@@ -209,7 +221,8 @@ h3 {
 }
 
 .infoText {
-  margin-top: 4px;
+  margin-top: 5px;
+  margin-bottom: 5px;
   text-align: justify;
 }
 

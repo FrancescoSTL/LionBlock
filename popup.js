@@ -284,8 +284,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	$(".dropdown-container").on('click', function(event){
 	    //document.getElementById('options').style.visibility='visible';
-	    $('.option-container').toggleClass('open');
+	    $('.option-container').toggleClass('open');;
 	    $("#click-tag").toggleClass('down');
+	});
+
+	$(".infodropdown-container").on('click', function(event){
+	    //document.getElementById('options').style.visibility='visible';
+	    $('.teaminfo-container').toggleClass('open');
+	    $("#click-tag2").toggleClass('down');
 	});
 
 	$('.carousel').carousel('pause')
