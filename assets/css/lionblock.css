@@ -162,7 +162,7 @@ h3 {
   transition: height 0.25s ease;
 }
 .teaminfo-container.open {
-  height: 101px;
+  height: 105px;
 }
 
 .footer {
@@ -177,7 +177,6 @@ h3 {
   padding-top: 6px; 
   font-size: 10px;
   font-weight: 100;
-  color: #e0e0e0;
 }
 
 #totalBlocked {
@@ -193,6 +192,12 @@ h3 {
   -moz-transition: all 0.3s linear;
   -webkit-transition: all 0.3s linear;
   transition: all 0.3s linear;
+}
+
+a,
+a:hover {
+  color: #e0e0e0;
+  text-decoration: none !important;
 }
 
 .flip.down {
