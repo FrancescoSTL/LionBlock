@@ -4,48 +4,50 @@
  "browser_action" field in manifest.json contains the "default_popup" key with
  value "popup.html".
  -->
- <html>
-  <head>
-    <title>Lionblock Popup</title>
+<html>
 
-    <!-- Section added by Marco De Lucca 
+<head>
+  <title>Lionblock Popup</title>
+
+  <!-- Section added by Marco De Lucca 
       -  setting bootstrap 
       -  Bootstrap Core CSS 
          Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="assets/bootstrap-toggle-master/css/bootstrap2-toggle.min.css">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+    crossorigin="anonymous">
+  <link rel="stylesheet" href="assets/bootstrap-toggle-master/css/bootstrap2-toggle.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    <!-- Bootstrap Core CSS -->
-    <!-- Latest compiled and minified CSS -->
-    <!-- <link href="assets/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet"> -->
+  <!-- Bootstrap Core CSS -->
+  <!-- Latest compiled and minified CSS -->
+  <!-- <link href="assets/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet"> -->
 
-    <!-- Style CSS -->
-    <link href="assets/css/lionblock.css" rel="stylesheet" />
+  <!-- Style CSS -->
+  <link href="assets/css/lionblock.css" rel="stylesheet" />
 
-    <!-- Roboto font -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <!-- Roboto font -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 
-  </head>
+</head>
 
-  <body>
+<body>
   <!-- Section added by Marco De Lucca 
       -  setting slider composed of two scenes, our main scene containing the ON/OFF button, headers and subheaders. 
       -  Bootstrap Core  
       - carousel slider allows for the multiple scene, similar to a composer -->
-    <div id = "sceneSlider" class = "carousel slide">
+  <div id="sceneSlider" class="carousel slide">
 
-      <!-- Carousel items -->
-      <div class = "carousel-inner">
+    <!-- Carousel items -->
+    <div class="carousel-inner">
 
-        <!-- Section added by Marco De Lucca 
+      <!-- Section added by Marco De Lucca 
           -  setting the main container as the DEFAULT active element to display in the carousel. 
           -  Bootstrap Core  
           - carousel slider allows for the multiple scene, similar to a composer -->
-        <div class = "item active">
+      <div class="item active">
 
-          <!-- Main Screen Container 
+        <!-- Main Screen Container 
             -  Sets the main container as the DEFAULT active element. 
             -  Contains the following elements:
               + Lionblock logo HEADER
@@ -53,122 +55,147 @@
               + A divider.
               + Dropdown icon, expands the menu for more advance options.
           -->
-          <div class="main-container center" alt = "First slide">
+        <div class="main-container center" alt="First slide">
 
-            <!-- Plugin Tittle -->
-            <div class="header">
-              <h1 class="brand">LionBlock</h1>
-              <p class = "adBlocker">Ad Blocker for Lindenwood University.</p>
-            </div>
-            <!-- Rounded switch -->
-            <div class="checkbox checkbox-slider-lg checkbox-slider--a" >
-              <label>
-                <input id="blockingCheckbox" type="checkbox" data-style="ios" data-onstyle="success" data-offstyle="danger" data-toggle="toggle" data-on="ON" data-off="OFF" data-width="110" data-height="40">
-              </label>
-            </div>
-			
-            <!-- Dividing line -->
-            <hr>
+          <!-- Plugin Tittle -->
+          <div class="header">
+            <h1 class="brand">LionBlock</h1>
+            <p class="adBlocker">Ad Blocker for Lindenwood University.</p>
+          </div>
 
-            <!-- Dropdown Arrow Icon -->
-            <div class="dropdown-container">
+          <!-- Rounded switch -->
+          <div class="checkbox checkbox-slider-lg checkbox-slider--a">
+            <label>
+                  <input id="blockingCheckbox" type="checkbox" data-style="ios" data-onstyle="success" data-offstyle="danger" data-toggle="toggle" data-on="ON" data-off="OFF" data-width="110" data-height="40">
+                </label>
+          </div>
 
-              <h2 class=" option-title "> Options <span id="click-tag" class="glyphicon glyphicon-chevron-down flip"></span></h4>
+          <!-- Dividing line -->
+          <hr>
 
-            </div>
+          <!-- Dropdown Arrow Icon -->
+          <div class="dropdown-container">
 
-            <!-- Information Button
+            <h2 class=" option-title "> Options <span id="click-tag" class="glyphicon glyphicon-chevron-down flip"></span></h4>
+
+          </div>
+
+          <!-- Information Button
               - slides to the PREVIOUS slide in the carousel (to the left) -->
-            <a class = "carousel-control left icon fa fa-info" href = "#sceneSlider" data-slide = "prev"></a>
-          </div> <!-- Closing Main Screen Container -->
+          <a class="carousel-control left icon fa fa-info" href="#sceneSlider"></a>
+        </div>
+        <!-- Closing Main Screen Container -->
 
-          <!-- Option Screen Expander
+        <!-- Option Screen Expander
             -  Expands the main container for more advance options. 
             -  Contains the following elements:
-              + Button: allow adds on page.
-              + Button: allow adds from domain.
+              + Button: Allow Ads on Page.
+              + Button: Allow Ads on Domain.
               + Button: Do not Block Ads on Page
-              + Statisctics: THIS NEEDS WORK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-          -->
-          <div class="option-container center">
-            <!-- Group of all advance options  -->
-            <div class="btn-group-vertical" role="group">
+              + Statisctics: Total Ads Blocked.
+        -->
+        <div class="option-container center">
+          <!-- Group of all advance options  -->
+          <div class="btn-group-vertical" role="group">
 
-              <!-- First button  -->
-              <div class="btn-group ">
-                <button  type="button" class="btn btn-success" id="allowPage"> Allow Ads on Page </button>
-              </div>  
-
-              
-              <!-- Second button  -->
-              <div class="btn-group">
-                <button type="button" class="btn btn-success" id="allowDomain"> Allow Ads on Domain </button>
-              </div>
-
-
-            </div>
-			  
-            <div class = "container">
-          
-              <h2 class = "stats" ><b> Statistics: </b></h2>
-              <h3 id = "totalBlocked">Total Ads Blocked:</h3> 
-
+            <!-- First button  -->
+            <div class="btn-group ">
+              <button type="button" class="btn btn-success" id="allowPage"> Allow Ads on Page </button>
             </div>
 
-			     <hr>
 
-			     <p class="text-right"> <a href="https://github.com/FrancescoSTL/LionBlock"><i class="fa fa-github"></i></a> LionBlock | MPL-2.0 Licence</p>
-			  
+            <!-- Second button  -->
+            <div class="btn-group">
+              <button type="button" class="btn btn-success" id="allowDomain"> Allow Ads on Domain </button>
+            </div>
+
+
+          </div>
+
+          <div class="container">
+            <h2 class="stats"><b> Statistics: </b></h2>
+            <h3>Total Ads Blocked: <span id="totalBlocked"></span></h3>
+          </div>
+
+          <div class="container footer">
+            <p class="text-right footer-content"> 
+              <a target="_newtab" href="https://github.com/FrancescoSTL/LionBlock">
+                <i class="fa fa-github float-left"></i>LionBlock | MPL-2.0 Licence
+              </a>
+            </p>
           </div>
 
         </div>
 
-        <!-- Information Left Carousel Scene
+      </div>
+
+      <!-- Information Left Carousel Scene
             -  Expands the main container for more advance options. 
             -  Contains the following elements:
               + Header and team names. THIS NEEDS WORK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
           -->
-        <div class = "item">
-          <div class="info-container center" alt = "Second slide">
-            <!-- Plugin Tittle -->
-            <div class="header">
-              <h1 class = "text-center">Information </h1>
-            </div>
+      <div class="item">
+        <div class="main-container center" alt="Second slide">
+          <!-- Information -->
+          <div class="header">
+            <h1 class="text-center">Information </h1>
+          </div>
 
 
-            <!-- Instruction and Description -->
+          <!-- Instruction and Description -->
+          <div class="container">
+
+            <p class="infoText"><b>LionBlock</b> is very simple to use! <br> Just PRESS the slider to start blocking annoying ads!</p>
+
+          </div>
+          <hr>
+          <!-- Dropdown Arrow Icon -->
+          <div class="infodropdown-container">
+
+            <h2 class="option-title "> Adbusters Team <span id="click-tag2" class="glyphicon glyphicon-chevron-down flip"></span></h4>
+
+          </div>
+
+          <!-- Go Back Button Slider Carousel to the right -->
+          <a class="carousel-control right icon fa fa-home movement" id="carouselLeftMove" href="#sceneSlider"></a>
+
+          <div class="teaminfo-container center">
+            <!-- Group of all advance options  -->
+
             <div class="container">
-
-              <p class = "infoText"><b>LionBlock</b> is very simple to use! <br>  Just PRESS the slider to start blocking annoying ads!</p><hr>
-			         <h2 class = "team-title" >Adbusters Team:</h2>
-               <ul>
-				        <b>
+              <ul>
+                <b>
                 <li> Francesco Polizzi</li>
                 <li> Andres Rodriguez </li>
                 <li> Boris Pallares </li>
                 <li> Marco De Lucca </li>
                 <li> Nicholas Haghighi </li>
-				        </b>
+                </b>
               </ul>
+            </div>
 
-			
-            <!-- Go Back Button Slider Carousel to the right -->
-            <a class = "carousel-control right icon fa fa-home movement" id ="carouselLeftMove" href = "#sceneSlider" data-slide = "next"></a>
+
+            <div class="container footer">
+              <p class="text-right footer-content">
+                <a target="_newtab" href="https://github.com/FrancescoSTL/LionBlock">
+                  <i class="fa fa-github float-left"></i>LionBlock | MPL-2.0 Licence
+                </a>
+              </p>
+            </div>
+
           </div>
-		  <hr>
-
-			  <p class="text-right" ><a href="https://github.com/FrancescoSTL/LionBlock"><i class="fa fa-github"></i></a> LionBlock | MPL-2.0 Licence</p>
         </div>
       </div>
 
     </div>
 
-  <!--
+    <!--
     - Calling Bootstrap JS and Jquery
    -->
-  <script src="assets/jquery/jquery-3.1.1.min.js"></script>
-  <script src="assets/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
-  <script src="assets/bootstrap-toggle-master/js/bootstrap2-toggle.min.js"></script>
-  <script src="popup.js"></script>
-  </body>
+    <script src="assets/jquery/jquery-3.1.1.min.js"></script>
+    <script src="assets/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <script src="assets/bootstrap-toggle-master/js/bootstrap2-toggle.min.js"></script>
+    <script src="popup.js"></script>
+</body>
+
 </html>
