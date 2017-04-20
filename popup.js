@@ -55,9 +55,9 @@ document.addEventListener('DOMContentLoaded', function() {
 	function getOverview() {
 		chrome.storage.local.get('adCount', function(event){
 			if (typeof event.adCount !== 'undefined')
-				$("#totalBlocked").text("Total Ads Blocked: " + event.adCount );
+				$("#totalBlocked").text(event.adCount);
 			else
-				$("#totalBlocked").text("Total Ads Blocked: " + 0 );
+				$("#totalBlocked").text("0");
 			//console.log(event.adCount);
 		});
 	}
@@ -68,9 +68,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		chrome.storage.local.get('adCount', function(event){
 		if (typeof event.adCount !== 'undefined')
-			$("#totalBlocked").text("Total Ads Blocked: " + event.adCount );
+			$("#totalBlocked").text(event.adCount);
 		else
-			$("#totalBlocked").text("Total Ads Blocked: " + 0 );
+			$("#totalBlocked").text(0);
 		//console.log(event.adCount);
 		});
 	});
@@ -276,20 +276,46 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	});
 
+	// closes the options dropdown and moves to the info section of the extension
+	$(".left").on('click', function(event, handleCarousel) {
+		if ($('.option-container').hasClass('open')) {
+			$('.option-container').toggleClass('open');
+			$("#click-tag").toggleClass('down');
+		}
+		$("#sceneSlider").carousel("prev");
+	});
 
+	// closes the team info dropdown and moves back to the main window of the extension
+	$(".right").on('click', function(event, handleCarousel) {
+		if ($('.teaminfo-container').hasClass('open')) {
+			$('.teaminfo-container').toggleClass('open');
+			$("#click-tag2").toggleClass('down');
+		}
+		$("#sceneSlider").carousel("next");
+	});
 
-	function showOptions() {
-	  document.getElementById('options').style.visibility='hidden';
-	}
-
+	// opens/closes the options dropdown
 	$(".dropdown-container").on('click', function(event){
-	    //document.getElementById('options').style.visibility='visible';
 	    $('.option-container').toggleClass('open');
 	    $("#click-tag").toggleClass('down');
 	});
 
+	// opens/closes the team info dropdown
+	$(".infodropdown-container").on('click', function(event){
+	    $('.teaminfo-container').toggleClass('open');
+	    $("#click-tag2").toggleClass('down');
+	});
+
+	// stops the carousel from moving
 	$('.carousel').carousel('pause')
 
+	/**
+	 * @function parseURI
+	 * 
+	 * @description Parses a URL into an object that describes said URL
+	 * 
+	 * @return {object} protocol | host | hostname | port | pathname | search | hash
+	 */
 	function parseURI(url) {
 	  var match = url.match(/^((https|http)?\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)(\/[^?#]*)(\?[^#]*|)(#.*|)$/);
 	  
@@ -303,5 +329,4 @@ document.addEventListener('DOMContentLoaded', function() {
 	    hash: match[7]
 	  }
 	} // end parse url
-
 });
