@@ -9,8 +9,8 @@ body {
 
 .fa {
   font-size: 14px;
-  padding-right: 5px;
-  color: #fff;
+  margin-right: 4px;
+
 }
 
 #status {
@@ -166,7 +166,7 @@ h3 {
   transition: height 0.25s ease;
 }
 .teaminfo-container.open {
-  height: 105px;
+  height: 115px;
 }
 
 .footer {
@@ -188,8 +188,13 @@ h3 {
 }
 
 #click-tag {
-  left: 5px;
-  top: 1px;
+  left: 1px;
+  top: 3px;
+}
+
+#click-tag2 {
+  left: 1px;
+  top: 3px;
 }
 
 .flip {
@@ -232,7 +237,6 @@ a:hover {
 .infoText {
   margin-top: 5px;
   margin-bottom: 5px;
-  text-align: justify;
 }
 
 #carouselLeftMove {
