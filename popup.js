@@ -88,7 +88,8 @@ document.addEventListener('DOMContentLoaded', function() {
 					//console.log("checking " + tab[0].url + " and " + allowList[url]);
 					if (allowList[url] == tab[0].url) {
 						//console.log("page match " + allowList[url] + " " + tab[0].url);
-						$("#allowPage").addClass("btn-danger");
+						$("#allowPage").addClass("btn-success");
+						$("#allowPage").html("<i class=\"fa fa-check\" aria-hidden=\"true\"></i> Allow Ads on Page");
 					} /*else {
 						console.log("no page match " + allowList[url] + " " + tab[0].url);
 					}*/
@@ -106,17 +107,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
 			chrome.tabs.query({"active": true}, function (tab) {				
 				for (url in allowList) {
-					//console.log("checking " + parseURI(tab[0].url).host + " and " + allowList[url]);
-					if (parseURI(allowList[url]).hostname == parseURI(tab[0].url).hostname) {
-						//console.log("domain match " + parseURI(allowList[url]).hostname + " " + parseURI(tab[0].url).hostname);
-						$("#allowDomain").addClass("btn-danger");
-						$("#allowPage").addClass("disabled");
-						if($("#allowPage").hasClass("btn-danger")) {
-							$("#allowPage").removeClass("btn-danger");
-						}
-					}/* else {
-						console.log("no domain match " + parseURI(allowList[url]).hostname + " " + parseURI(tab[0].url).hostname);
-					}*/
+					console.log("checking " + parseURI(tab[0].url).host + " and " + allowList[url]);
+					if (allowList[url] !== null && tab[0].url)
+						if (parseURI(allowList[url]).hostname == parseURI(tab[0].url).hostname) {
+							//console.log("domain match " + parseURI(allowList[url]).hostname + " " + parseURI(tab[0].url).hostname);
+							$("#allowDomain").addClass("btn-success");
+							$("#allowDomain").html("<i class=\"fa fa-check\" aria-hidden=\"true\"></i> Allow Ads on Domain");
+							$("#allowPage").addClass("disabled");
+							if($("#allowPage").hasClass("btn-success")) {
+								$("#allowPage").removeClass("btn-success");
+								$("#allowPage").text("Allow Ads on Page");
+							}
+						}/* else {
+							console.log("no domain match " + parseURI(allowList[url]).hostname + " " + parseURI(tab[0].url).hostname);
+						}*/
 				}
 			});
 		}
@@ -135,26 +139,31 @@ document.addEventListener('DOMContentLoaded', function() {
 				chrome.tabs.query({"active": true}, function (tab) {
 					var isCurrAllowed = false;
 					var allowedIndex = -1;
+					console.log("LIST: ")
 					for (url in allowUrlList) {
+						console.log(allowUrlList[url]);
 						if (allowUrlList[url] == tab[0].url) {
 							isCurrAllowed = true;
 							allowedIndex = url;
 							break;
 						}
 					}
+					console.log("--------");
 
 					if (isCurrAllowed) {
 						allowUrlList[allowedIndex] = null;
 						chrome.storage.local.set({"allowUrlList": allowUrlList });
 						chrome.runtime.sendMessage({"allowUrlList": allowUrlList });
-						$("#allowPage").removeClass("btn-danger");
+						$("#allowPage").removeClass("btn-success");
+						$("#allowPage").text("Allow Ads on Page");
 						chrome.tabs.reload();
 					} else {
-						// console.log("adding " + tab[0].url + " to list");
+						console.log("adding " + tab[0].url + " to list");
 						allowUrlList.push(tab[0].url);
 						chrome.storage.local.set({"allowUrlList": allowUrlList });
 						chrome.runtime.sendMessage({"allowUrlList": allowUrlList });
-						$("#allowPage").addClass("btn-danger");
+						$("#allowPage").addClass("btn-success");
+						$("#allowPage").html("<i class=\"fa fa-check\" aria-hidden=\"true\"></i> Allow Ads on Page");
 						chrome.tabs.reload();
 
 					}
@@ -165,26 +174,31 @@ document.addEventListener('DOMContentLoaded', function() {
 				chrome.tabs.query({"active": true}, function (tab) {
 					var isCurrAllowed = false;
 					var allowedIndex = -1;
+					console.log("LIST: ")
 					for (url in allowUrlList) {
+						console.log(allowUrlList[url]);
 						if (allowUrlList[url] == tab[0].url) {
 							isCurrAllowed = true;
 							allowedIndex = url;
 							break;
 						}
 					}
+					console.log("--------");
 
 					if (isCurrAllowed) {
 						allowUrlList[allowedIndex] = null;
 						chrome.storage.local.set({"allowUrlList": allowUrlList });
 						chrome.runtime.sendMessage({"allowUrlList": allowUrlList });
-						$("#allowPage").removeClass("btn-danger");
+						$("#allowPage").removeClass("btn-success");
+						$("#allowPage").text("Allow Ads on Page");
 						chrome.tabs.reload();
 					} else {
-						//console.log("adding " + tab[0].url + " to list");
+						console.log("adding " + tab[0].url + " to list");
 						allowUrlList.push(tab[0].url);
 						chrome.storage.local.set({"allowUrlList": allowUrlList });
 						chrome.runtime.sendMessage({"allowUrlList": allowUrlList });
-						$("#allowPage").addClass("btn-danger");
+						$("#allowPage").addClass("btn-success");
+						$("#allowPage").html("<i class=\"fa fa-check\" aria-hidden=\"true\"></i> Allow Ads on Page");
 						chrome.tabs.reload();
 
 					}
@@ -196,43 +210,53 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	$("#allowDomain").on('click', function(event) {
 		chrome.storage.local.get('allowDomainList', function (result) {
-			if (typeof result.allowDomainList != 'undefined') {
+			var is_null = true;
+
+			for(value in result.allowDomainList) {
+				if (result.allowDomainList[value] !== null) {
+					is_null = false;
+					break;
+				}
+			}
+
+			if (typeof result.allowDomainList != 'undefined' && !is_null) {
 				var allowDomainList = result.allowDomainList;
 
 				chrome.tabs.query({"active": true}, function (tab) {
 					var isCurrAllowed = false;
 					var allowedIndex = -1;
 					for (url in allowDomainList) {
-						if (allowDomainList[url] == tab[0].url) {
-							isCurrAllowed = true;
-							allowedIndex = url;
-							break;
-						}
+						if (allowDomainList[url] !== null && tab[0].url !== null)
+							if (parseURI(allowDomainList[url]).hostname == parseURI(tab[0].url).hostname) {
+								isCurrAllowed = true;
+								allowedIndex = url;
+								break;
+							}
 					}
 
 					if (isCurrAllowed) {
 						allowDomainList[allowedIndex] = null;
 						chrome.storage.local.set({"allowDomainList": allowDomainList });
 						chrome.runtime.sendMessage({"allowDomainList": allowDomainList });
-						$("#allowDomain").removeClass("btn-danger");
+						$("#allowDomain").removeClass("btn-success");
+						$("#allowDomain").text("Allow Ads on Domain");
 						if($("#allowPage").hasClass("disabled")) {
 							$("#allowPage").removeClass("disabled");
 						}
 						chrome.tabs.reload();
 					} else {
-						//console.log("adding " + tab[0].url + " to list");
+						console.log("adding " + tab[0].url + " to list");
 						allowDomainList.push(tab[0].url);
 						chrome.storage.local.set({"allowDomainList": allowDomainList });
 						chrome.runtime.sendMessage({"allowDomainList": allowDomainList });
-						$("#allowDomain").addClass("btn-danger");
+						$("#allowDomain").addClass("btn-success");
+						$("#allowDomain").html("<i class=\"fa fa-check\" aria-hidden=\"true\"></i> Allow Ads on Domain");
 						$("#allowPage").addClass("disabled");
-						if($("#allowPage").hasClass("btn-danger")) {
-							$("#allowPage").removeClass("btn-danger");
-						}
 
 						chrome.tabs.reload();
 
 					}
+					console.log(allowDomainList);
 				});
 			} else {
 				var allowDomainList = [];
@@ -241,7 +265,8 @@ document.addEventListener('DOMContentLoaded', function() {
 					var isCurrAllowed = false;
 					var allowedIndex = -1;
 					for (url in allowDomainList) {
-						if (allowDomainList[url] == tab[0].url) {
+						console.log(allowDomainList[url] + " " + tab[0].url);
+						if (parseURI(allowDomainList[url]).hostname == parseURI(tab[0].url).hostname) {
 							isCurrAllowed = true;
 							allowedIndex = url;
 							break;
@@ -252,25 +277,25 @@ document.addEventListener('DOMContentLoaded', function() {
 						allowDomainList[allowedIndex] = null;
 						chrome.storage.local.set({"allowDomainList": allowDomainList });
 						chrome.runtime.sendMessage({"allowDomainList": allowDomainList });
-						$("#allowDomain").removeClass("btn-danger");
+						$("#allowDomain").removeClass("btn-success");
+						$("#allowDomain").text("Allow Ads on Domain");
 						if($("#allowPage").hasClass("disabled")) {
 							$("#allowPage").removeClass("disabled");
 						}
 						chrome.tabs.reload();
 					} else {
-						//console.log("adding " + tab[0].url + " to list");
+						console.log("adding " + tab[0].url + " to list");
 						allowDomainList.push(tab[0].url);
 						chrome.storage.local.set({"allowDomainList": allowDomainList });
 						chrome.runtime.sendMessage({"allowDomainList": allowDomainList });
-						$("#allowDomain").addClass("btn-danger");
+						$("#allowDomain").addClass("btn-success");
+						$("#allowDomain").html("<i class=\"fa fa-check\" aria-hidden=\"true\"></i> Allow Ads on Domain");
 						$("#allowPage").addClass("disabled");
-						if($("#allowPage").hasClass("btn-danger")) {
-							$("#allowPage").removeClass("btn-danger");
-						}
 
 						chrome.tabs.reload();
 
 					}
+					console.log(allowDomainList);
 				});
 			}
 		});

@@ -260,3 +260,7 @@ a:hover {
 .team-title {
   text-align: left;
 }
+
+.btn-pressed {
+  background-color: grey;
+}
