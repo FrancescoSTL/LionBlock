@@ -41,7 +41,9 @@ document.addEventListener('DOMContentLoaded', function() {
 		        chrome.runtime.sendMessage({"blocking": true});
 		        chrome.storage.local.set({"isBlocking": true });
 		        blocking = true;
-		        $("#blockedLabel").html("<i class=\"fa fa-spinner fa-pulse fa-fw\"></i>Total Ads Blocked: <span id=\"totalBlocked\"></span>");
+
+		        if (!$("#allowDomain").hasClass("btn-success") && !$("#allowPage").hasClass("btn-success"))
+		        	$("#blockedLabel").html("<i class=\"fa fa-spinner fa-pulse fa-fw\"></i>Total Ads Blocked: <span id=\"totalBlocked\"></span>");
 		    }
 		});
 	});
@@ -94,6 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						//console.log("page match " + allowList[url] + " " + tab[0].url);
 						$("#allowPage").addClass("btn-success");
 						$("#allowPage").html("<i class=\"fa fa-check\" aria-hidden=\"true\"></i> Allow Ads on Page");
+						$("#blockedLabel").html("Total Ads Blocked: <span id=\"totalBlocked\"></span>");
 					} /*else {
 						console.log("no page match " + allowList[url] + " " + tab[0].url);
 					}*/
@@ -118,10 +121,15 @@ document.addEventListener('DOMContentLoaded', function() {
 								//console.log("domain match " + parseURI(allowList[url]).hostname + " " + parseURI(tab[0].url).hostname);
 								$("#allowDomain").addClass("btn-success");
 								$("#allowDomain").html("<i class=\"fa fa-check\" aria-hidden=\"true\"></i> Allow Ads on Domain");
+								$("#blockedLabel").html("Total Ads Blocked: <span id=\"totalBlocked\"></span>");
 								$("#allowPage").addClass("disabled");
 								if($("#allowPage").hasClass("btn-success")) {
 									$("#allowPage").removeClass("btn-success");
 									$("#allowPage").text("Allow Ads on Page");
+
+									if (blocking) {
+										$("#blockedLabel").html("<i class=\"fa fa-spinner fa-pulse fa-fw\"></i>Total Ads Blocked: <span id=\"totalBlocked\"></span>");
+									}
 								}
 							}/* else {
 								console.log("no domain match " + parseURI(allowList[url]).hostname + " " + parseURI(tab[0].url).hostname);
@@ -163,6 +171,9 @@ document.addEventListener('DOMContentLoaded', function() {
 							chrome.runtime.sendMessage({"allowUrlList": allowUrlList });
 							$("#allowPage").removeClass("btn-success");
 							$("#allowPage").text("Allow Ads on Page");
+							if (blocking) {
+								$("#blockedLabel").html("<i class=\"fa fa-spinner fa-pulse fa-fw\"></i>Total Ads Blocked: <span id=\"totalBlocked\"></span>");
+							}
 							chrome.tabs.reload();
 						} else {
 							console.log("adding " + tab[0].url + " to list");
@@ -171,6 +182,7 @@ document.addEventListener('DOMContentLoaded', function() {
 							chrome.runtime.sendMessage({"allowUrlList": allowUrlList });
 							$("#allowPage").addClass("btn-success");
 							$("#allowPage").html("<i class=\"fa fa-check\" aria-hidden=\"true\"></i> Allow Ads on Page");
+							$("#blockedLabel").html("Total Ads Blocked: <span id=\"totalBlocked\"></span>");
 							chrome.tabs.reload();
 
 						}
@@ -201,6 +213,10 @@ document.addEventListener('DOMContentLoaded', function() {
 							chrome.runtime.sendMessage({"allowUrlList": allowUrlList });
 							$("#allowPage").removeClass("btn-success");
 							$("#allowPage").text("Allow Ads on Page");
+							if (blocking) {
+								$("#blockedLabel").html("<i class=\"fa fa-spinner fa-pulse fa-fw\"></i>Total Ads Blocked: <span id=\"totalBlocked\"></span>");
+							}
+							
 							chrome.tabs.reload();
 						} else {
 							console.log("adding " + tab[0].url + " to list");
@@ -209,6 +225,7 @@ document.addEventListener('DOMContentLoaded', function() {
 							chrome.runtime.sendMessage({"allowUrlList": allowUrlList });
 							$("#allowPage").addClass("btn-success");
 							$("#allowPage").html("<i class=\"fa fa-check\" aria-hidden=\"true\"></i> Allow Ads on Page");
+							$("#blockedLabel").html("Total Ads Blocked: <span id=\"totalBlocked\"></span>");
 							chrome.tabs.reload();
 
 						}
@@ -253,6 +270,9 @@ document.addEventListener('DOMContentLoaded', function() {
 							chrome.runtime.sendMessage({"allowDomainList": allowDomainList });
 							$("#allowDomain").removeClass("btn-success");
 							$("#allowDomain").text("Allow Ads on Domain");
+							if (blocking) {
+								$("#blockedLabel").html("<i class=\"fa fa-spinner fa-pulse fa-fw\"></i>Total Ads Blocked: <span id=\"totalBlocked\"></span>");
+							}
 							if($("#allowPage").hasClass("disabled")) {
 								$("#allowPage").removeClass("disabled");
 							}
@@ -264,6 +284,7 @@ document.addEventListener('DOMContentLoaded', function() {
 							chrome.runtime.sendMessage({"allowDomainList": allowDomainList });
 							$("#allowDomain").addClass("btn-success");
 							$("#allowDomain").html("<i class=\"fa fa-check\" aria-hidden=\"true\"></i> Allow Ads on Domain");
+							$("#blockedLabel").html("Total Ads Blocked: <span id=\"totalBlocked\"></span>");
 							$("#allowPage").addClass("disabled");
 
 							chrome.tabs.reload();
@@ -293,6 +314,9 @@ document.addEventListener('DOMContentLoaded', function() {
 							chrome.runtime.sendMessage({"allowDomainList": allowDomainList });
 							$("#allowDomain").removeClass("btn-success");
 							$("#allowDomain").text("Allow Ads on Domain");
+							if (blocking) {
+								$("#blockedLabel").html("<i class=\"fa fa-spinner fa-pulse fa-fw\"></i>Total Ads Blocked: <span id=\"totalBlocked\"></span>");
+							}
 							if($("#allowPage").hasClass("disabled")) {
 								$("#allowPage").removeClass("disabled");
 							}
@@ -304,6 +328,7 @@ document.addEventListener('DOMContentLoaded', function() {
 							chrome.runtime.sendMessage({"allowDomainList": allowDomainList });
 							$("#allowDomain").addClass("btn-success");
 							$("#allowDomain").html("<i class=\"fa fa-check\" aria-hidden=\"true\"></i> Allow Ads on Domain");
+							$("#blockedLabel").html("Total Ads Blocked: <span id=\"totalBlocked\"></span>");
 							$("#allowPage").addClass("disabled");
 
 							chrome.tabs.reload();
