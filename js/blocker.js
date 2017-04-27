@@ -1,16 +1,16 @@
 // Set of the hostnames that are going to be blocked
 var adsBlocked = 0; // ads blocked counter
-var blocklistSet = new Set();
-var currentTabURLs = {};
-const disconnectJSON = require('../data/disconnect.json');
-const disconnectEntitylist = require('../data/disconnectEntitylist.json');
+var blocklistSet = new Set(); // set that holds our block list
+var currentTabURLs = {}; // url on tabs currently opened
+const disconnectJSON = require('../data/disconnect.json');  // require disconnect.json
+const disconnectEntitylist = require('../data/disconnectEntitylist.json');  // require entity list
 var {
   allHosts,
   canonicalizeHost
-} = require('../js/canonicalize.js');
-var blocking = false;
-var allowUrlList = [];
-var allowDomainList = [];
+} = require('../js/canonicalize.js');  // require aditional modules
+var blocking = false;  // set default blocker behavior
+var allowUrlList = [];  // initialize array of allowed urls
+var allowDomainList = []; // initialize array of allowed domains
 
 // parse our disconnect.json object
 parseJSON();
@@ -210,7 +210,6 @@ function parseJSON() {
           for (var subDomain in disconnectJSON.categories[category][network][hostname]) {
             // gets the subdomain as http://2leep.com/ , http://33across.com/ , http://www.4info.com/
             for (var entitySubDomain in disconnectJSON.categories[category][network][hostname][subDomain]) {
-              // gets wierd random numbers
               blocklistSet.add(disconnectJSON.categories[category][network][hostname][subDomain][entitySubDomain]);
             }
           }

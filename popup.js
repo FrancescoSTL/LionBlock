@@ -22,14 +22,14 @@ document.addEventListener('DOMContentLoaded', function () {
 			// turn off the slider
 			$("#blockingCheckbox").bootstrapToggle('off');
 			// remove the spinner next to our total ads blocked stat, if neccessary
-			$("#blockedLabel").html("Total Ads Blocked: <span id=\"totalBlocked\"></span>");
+			$("#spinner").hide();
 		} else {
 			// set the blocking flag to true
 			blocking = true;
 			// turn off the slider
 			$("#blockingCheckbox").bootstrapToggle('on');
 			// add the spinner next to our total ads blocked stat
-			$("#blockedLabel").html("<i class=\"fa fa-spinner fa-pulse fa-fw\"></i>Total Ads Blocked: <span id=\"totalBlocked\"></span>");
+			$("#spinner").show();
 		}
 
 		// if the on/off slider is changed via click
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				// set that flag locally
 				blocking = false;
 				// remove the spinner from total ads blocked stat
-				$("#blockedLabel").html("Total Ads Blocked: <span id=\"totalBlocked\"></span>");
+				$("#spinner").hide();
 			} else {
 				// let the backend know we want to start blocking
 				chrome.runtime.sendMessage({
@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				// if we're not currently supposed to be allowing for domain or page, we're blocking ads
 				if (!$("#allowDomain").hasClass("btn-success") && !$("#allowPage").hasClass("btn-success"))
 					// so add the spinner
-					$("#blockedLabel").html("<i class=\"fa fa-spinner fa-pulse fa-fw\"></i>Total Ads Blocked: <span id=\"totalBlocked\"></span>");
+					$("#spinner").show();
 			}
 		});
 	});
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						// add the checkmark to it
 						$("#allowPage").html("<i class=\"fa fa-check\" aria-hidden=\"true\"></i> Allow Ads on Page");
 						// and remove the spinner
-						$("#blockedLabel").html("Total Ads Blocked: <span id=\"totalBlocked\"></span>");
+						$("#spinner").hide();
 					}
 				}
 			});
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', function () {
 								// add a checkmark to it
 								$("#allowDomain").html("<i class=\"fa fa-check\" aria-hidden=\"true\"></i> Allow Ads on Domain");
 								// remove the spinner
-								$("#blockedLabel").html("Total Ads Blocked: <span id=\"totalBlocked\"></span>");
+								$("#spinner").hide();
 								// disable the allowpage button
 								$("#allowPage").addClass("disabled");
 							}
@@ -208,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						// if we're blocking
 						if (blocking) {
 							// add the spinner
-							$("#blockedLabel").html("<i class=\"fa fa-spinner fa-pulse fa-fw\"></i>Total Ads Blocked: <span id=\"totalBlocked\"></span>");
+							$("#spinner").show();
 						}
 						// and reload the page
 						chrome.tabs.reload();
@@ -227,7 +227,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						// add a checkmark
 						$("#allowPage").html("<i class=\"fa fa-check\" aria-hidden=\"true\"></i> Allow Ads on Page");
 						// remove the spinner
-						$("#blockedLabel").html("Total Ads Blocked: <span id=\"totalBlocked\"></span>");
+						$("#spinner").hide();
 						// and reload the page
 						chrome.tabs.reload();
 
@@ -302,7 +302,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						// if we're blocking and the allowpage button isn't clicked
 						if (blocking && !$("#allowPage").hasClass("btn-success")) {
 							// add the spinner because we know we're really blocking
-							$("#blockedLabel").html("<i class=\"fa fa-spinner fa-pulse fa-fw\"></i>Total Ads Blocked: <span id=\"totalBlocked\"></span>");
+							$("#spinner").show();
 						}
 						// if the allowpage is currently disabled
 						if ($("#allowPage").hasClass("disabled")) {
@@ -326,7 +326,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						// add a checkmark
 						$("#allowDomain").html("<i class=\"fa fa-check\" aria-hidden=\"true\"></i> Allow Ads on Domain");
 						// remove the spinner
-						$("#blockedLabel").html("Total Ads Blocked: <span id=\"totalBlocked\"></span>");
+						$("#spinner").hide();
 						// make the allowpage button disabled
 						$("#allowPage").addClass("disabled");
 
