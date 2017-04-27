@@ -2,104 +2,108 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// once the dom content has finished loading, lets start interacting with it
 document.addEventListener('DOMContentLoaded', function() {
 	var blocking;
-	/*chrome.runtime.sendMessage({"blockingCheck": true }, function (response) {
-		console.log("recieved response");
-		blocking = response.isBlocking;
-		console.log("response: " + response.blocking + " " + blocking);
 
-		if (blocking) {
-	        $("#blockingCheckbox").bootstrapToggle('on');
-		} else {
-			$("#blockingCheckbox").bootstrapToggle('off');
-		}
-	});*/
-
-
+	// get the isBlocking flag from storage to determine our app state
 	chrome.storage.local.get('isBlocking', function (result) {
+		// get the blocking flag from our returned memory object
 		blocking = result.isBlocking;
 
+		// if we're not blocking or blocking has not yet been set
 		if (typeof blocking == 'undefined' || blocking == false) {
+			// set our local blocking flag to false
 			blocking = false;
+			// set the storage blocking flag to false
 			chrome.storage.local.set({"isBlocking": false });
+			// turn off the slider
 			$("#blockingCheckbox").bootstrapToggle('off');
+			// remove the spinner next to our total ads blocked stat, if neccessary
 			$("#blockedLabel").html("Total Ads Blocked: <span id=\"totalBlocked\"></span>");
 		} else {
+			// set the blocking flag to true
 			blocking = true;
+			// turn off the slider
 			$("#blockingCheckbox").bootstrapToggle('on');
+			// add the spinner next to our total ads blocked stat
 			$("#blockedLabel").html("<i class=\"fa fa-spinner fa-pulse fa-fw\"></i>Total Ads Blocked: <span id=\"totalBlocked\"></span>");
 		}
 
+		// if the on/off slider is changed via click
 		$("#blockingCheckbox").change(function(event) {
+			// and we're currently supposed to be blocking
 		    if (blocking) {
+		    	// let the backend know we want to stop blocking
 		        chrome.runtime.sendMessage({"blocking": false});
+		        // store that flag in memory
 		        chrome.storage.local.set({"isBlocking": false });
+		        // set that flag locally
 		        blocking = false;
+		        // remove the spinner from total ads blocked stat
 		        $("#blockedLabel").html("Total Ads Blocked: <span id=\"totalBlocked\"></span>");
 		    } else {
+		    	// let the backend know we want to start blocking
 		        chrome.runtime.sendMessage({"blocking": true});
+		        // store that flag in memory
 		        chrome.storage.local.set({"isBlocking": true });
+		        // set that flag locally
 		        blocking = true;
 
+		        // if we're not currently supposed to be allowing for domain or page, we're blocking ads
 		        if (!$("#allowDomain").hasClass("btn-success") && !$("#allowPage").hasClass("btn-success"))
+		        	// so add the spinner
 		        	$("#blockedLabel").html("<i class=\"fa fa-spinner fa-pulse fa-fw\"></i>Total Ads Blocked: <span id=\"totalBlocked\"></span>");
 		    }
 		});
 	});
 
-	// check ad count 
-	/*chrome.storage.local.get('adCount', function (result) {
-
-		if (result.adCount)
-			console.log(result.adCount);
-	})*/
-
-	// check the total ad blocked 
-	setInterval(getOverview, 1000);
-
+	/**
+	 * @function getOverview
+	 * 
+	 * @description updates the UI with the total number of ads blocked, as noted in storage
+	 * 
+	 */
 	function getOverview() {
+		// get the adcount from storage
 		chrome.storage.local.get('adCount', function(event){
+			// if we have an ad count, update it
 			if (typeof event.adCount !== 'undefined')
 				$("#totalBlocked").text(event.adCount);
 			else
+				// if not, set it to 0
 				$("#totalBlocked").text("0");
-			//console.log(event.adCount);
 		});
 	}
-	
 
+	// check the total ad blocked 
+	setInterval(getOverview, 1000);
+	
 	// every time there is a change in the storage recheck the ad count
 	chrome.storage.onChanged.addListener(function(changes, namespace) {
-
-		chrome.storage.local.get('adCount', function(event){
-		if (typeof event.adCount !== 'undefined')
-			$("#totalBlocked").text(event.adCount);
-		else
-			$("#totalBlocked").text(0);
-		//console.log(event.adCount);
-		});
+		getOverview();
 	});
-
 
 	// check the allow URL list each time the popup opens to ensure we've enabled the button if need be (based upon current URL)
 	chrome.storage.local.get('allowUrlList', function (result) {
+		// if we've got a list of pages we want to allow
 		if (result.allowUrlList) {
+			// store it locally
 			var allowList = result.allowUrlList;
 
-			//console.log("allowUrlList: " + allowList);
-
-			chrome.tabs.query({"active": true}, function (tab) {				
+			// get our active tab to check against
+			chrome.tabs.query({"active": true}, function (tab) {	
+				// run through every page in our allow page list			
 				for (url in allowList) {
-					//console.log("checking " + tab[0].url + " and " + allowList[url]);
+					// if any element is the same page as the page we're active on
 					if (allowList[url] == tab[0].url) {
-						//console.log("page match " + allowList[url] + " " + tab[0].url);
+						// then make the button green
 						$("#allowPage").addClass("btn-success");
+						// add the checkmark to it
 						$("#allowPage").html("<i class=\"fa fa-check\" aria-hidden=\"true\"></i> Allow Ads on Page");
+						// and remove the spinner
 						$("#blockedLabel").html("Total Ads Blocked: <span id=\"totalBlocked\"></span>");
-					} /*else {
-						console.log("no page match " + allowList[url] + " " + tab[0].url);
-					}*/
+					}
 				}
 			});
 		}
@@ -107,139 +111,116 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	// check the allow URL list each time the popup opens to ensure we've enabled the button if need be (based upon current URL)
 	chrome.storage.local.get('allowDomainList', function (result) {
+		// if we've got a list of domains we want to allow
 		if (result.allowDomainList) {
 			var allowList = result.allowDomainList;
 
-			//console.log("allowDomainList is: " + allowList);
-
+			// get our active tab to check against
 			chrome.tabs.query({"active": true}, function (tab) {
+				// so long as we're not on a privliged page
 				if(tab[0].url.substring(0,8) !== "chrome://")
+					// run through every page in our allow domain list
 					for (url in allowList) {
-						//console.log("checking " + parseURI(tab[0].url).host + " and " + allowList[url]);
+						// if we've got a domain we're currently on and the element in our list isnt null
 						if (allowList[url] !== null && tab[0].url)
+							// and if any element is the same domain as the domain we're active on
 							if (parseURI(allowList[url]).hostname == parseURI(tab[0].url).hostname) {
-								//console.log("domain match " + parseURI(allowList[url]).hostname + " " + parseURI(tab[0].url).hostname);
+								// make the allow domain button green
 								$("#allowDomain").addClass("btn-success");
+								// add a checkmark to it
 								$("#allowDomain").html("<i class=\"fa fa-check\" aria-hidden=\"true\"></i> Allow Ads on Domain");
+								// remove the spinner
 								$("#blockedLabel").html("Total Ads Blocked: <span id=\"totalBlocked\"></span>");
+								// disable the allowpage button
 								$("#allowPage").addClass("disabled");
-								if($("#allowPage").hasClass("btn-success")) {
-									$("#allowPage").removeClass("btn-success");
-									$("#allowPage").text("Allow Ads on Page");
-
-									if (blocking) {
-										$("#blockedLabel").html("<i class=\"fa fa-spinner fa-pulse fa-fw\"></i>Total Ads Blocked: <span id=\"totalBlocked\"></span>");
-									}
-								}
-							}/* else {
-								console.log("no domain match " + parseURI(allowList[url]).hostname + " " + parseURI(tab[0].url).hostname);
-							}*/
+							}
 					}
 			});
 		}
 	});
 
+	// if someone clicks on the allow ads on page button
 	$("#allowPage").on('click', function(event) {
+		// if the button is supposed to be disabled, don't process the click
 		if ($("#allowPage").hasClass("disabled")) {
 			return;
 		}
 
-		//console.log("clicked");
+		// get the url list
 		chrome.storage.local.get('allowUrlList', function (result) {
+			var allowUrlList;
+			// initalize it locally depending upon whether it is null
 			if (typeof result.allowUrlList != 'undefined') {
-				var allowUrlList = result.allowUrlList;
-
-				chrome.tabs.query({"active": true}, function (tab) {
-					if(tab[0].url.substring(0,9) !== "chrome://") {
-
-						var isCurrAllowed = false;
-						var allowedIndex = -1;
-						console.log("LIST: ")
-						for (url in allowUrlList) {
-							console.log(allowUrlList[url]);
-							if (allowUrlList[url] == tab[0].url) {
-								isCurrAllowed = true;
-								allowedIndex = url;
-								break;
-							}
-						}
-						console.log("--------");
-
-						if (isCurrAllowed) {
-							allowUrlList[allowedIndex] = null;
-							chrome.storage.local.set({"allowUrlList": allowUrlList });
-							chrome.runtime.sendMessage({"allowUrlList": allowUrlList });
-							$("#allowPage").removeClass("btn-success");
-							$("#allowPage").text("Allow Ads on Page");
-							if (blocking) {
-								$("#blockedLabel").html("<i class=\"fa fa-spinner fa-pulse fa-fw\"></i>Total Ads Blocked: <span id=\"totalBlocked\"></span>");
-							}
-							chrome.tabs.reload();
-						} else {
-							console.log("adding " + tab[0].url + " to list");
-							allowUrlList.push(tab[0].url);
-							chrome.storage.local.set({"allowUrlList": allowUrlList });
-							chrome.runtime.sendMessage({"allowUrlList": allowUrlList });
-							$("#allowPage").addClass("btn-success");
-							$("#allowPage").html("<i class=\"fa fa-check\" aria-hidden=\"true\"></i> Allow Ads on Page");
-							$("#blockedLabel").html("Total Ads Blocked: <span id=\"totalBlocked\"></span>");
-							chrome.tabs.reload();
-
-						}
-					}
-				});
+				allowUrlList = result.allowUrlList;
 			} else {
-				var allowUrlList = [];
+				allowUrlList = [];
+			}
 
+				// get our active tab
 				chrome.tabs.query({"active": true}, function (tab) {
+					// if the active url is not privliged
 					if(tab[0].url.substring(0,9) !== "chrome://") {
-
+						// set our index and flag for whether the url is currently allowed
 						var isCurrAllowed = false;
 						var allowedIndex = -1;
-						console.log("LIST: ")
+
+						// determine if the url is allowed and if so, what its index is
 						for (url in allowUrlList) {
-							console.log(allowUrlList[url]);
 							if (allowUrlList[url] == tab[0].url) {
 								isCurrAllowed = true;
 								allowedIndex = url;
 								break;
 							}
 						}
-						console.log("--------");
 
+						// if it is allowed
 						if (isCurrAllowed) {
+							// nullify it
 							allowUrlList[allowedIndex] = null;
+							// update the list in storage
 							chrome.storage.local.set({"allowUrlList": allowUrlList });
+							// push that list to the backend for an update
 							chrome.runtime.sendMessage({"allowUrlList": allowUrlList });
+							// make the button white again
 							$("#allowPage").removeClass("btn-success");
+							// remove the checkmark
 							$("#allowPage").text("Allow Ads on Page");
+							// if we're blocking
 							if (blocking) {
+								// add the spinner
 								$("#blockedLabel").html("<i class=\"fa fa-spinner fa-pulse fa-fw\"></i>Total Ads Blocked: <span id=\"totalBlocked\"></span>");
 							}
-							
+							// and reload the page
 							chrome.tabs.reload();
 						} else {
-							console.log("adding " + tab[0].url + " to list");
+							// if it isn't allowed, add it to our allow list
 							allowUrlList.push(tab[0].url);
+							// update in local storage and let the backend know with our update list
 							chrome.storage.local.set({"allowUrlList": allowUrlList });
 							chrome.runtime.sendMessage({"allowUrlList": allowUrlList });
+							// make the button green
 							$("#allowPage").addClass("btn-success");
+							// add a checkmark
 							$("#allowPage").html("<i class=\"fa fa-check\" aria-hidden=\"true\"></i> Allow Ads on Page");
+							// remove the spinner
 							$("#blockedLabel").html("Total Ads Blocked: <span id=\"totalBlocked\"></span>");
+							// and reload the page
 							chrome.tabs.reload();
 
 						}
 					}
 				});
-			}
 		});
 
 	});
 
+	// if someone clicks on the allow ads on page button
 	$("#allowDomain").on('click', function(event) {
+		// get the url list
 		chrome.storage.local.get('allowDomainList', function (result) {
 			var is_null = true;
 
+			// determine whether our list is full of null values or not
 			for(value in result.allowDomainList) {
 				if (result.allowDomainList[value] !== null) {
 					is_null = false;
@@ -247,14 +228,27 @@ document.addEventListener('DOMContentLoaded', function() {
 				}
 			}
 
+			var allowDomainList;
+
+			// if we have a list that is defined and it isn't full of null values
 			if (typeof result.allowDomainList != 'undefined' && !is_null) {
-				var allowDomainList = result.allowDomainList;
+				// get it from storage
+				allowDomainList = result.allowDomainList;
+				
+				} else {
+					// if not, initialize it as a new array
+					allowDomainList = [];
+				}
 
+				// get the domain list
 				chrome.tabs.query({"active": true}, function (tab) {
-
+					// if the active url is not privliged
 					if(tab[0].url.substring(0,9) !== "chrome://") {
+						// set our index and flag for whether the url is currently allowed
 						var isCurrAllowed = false;
 						var allowedIndex = -1;
+
+						// determine if the url is allowed and if so, what its index is
 						for (url in allowDomainList) {
 							if (allowDomainList[url] !== null && tab[0].url !== null)
 								if (parseURI(allowDomainList[url]).hostname == parseURI(tab[0].url).hostname) {
@@ -264,80 +258,49 @@ document.addEventListener('DOMContentLoaded', function() {
 								}
 						}
 
+						// if it is allowed
 						if (isCurrAllowed) {
+							// nullify it
 							allowDomainList[allowedIndex] = null;
+							// update the list in storage and push to the backend the updated list
 							chrome.storage.local.set({"allowDomainList": allowDomainList });
 							chrome.runtime.sendMessage({"allowDomainList": allowDomainList });
+							// make the button white again
 							$("#allowDomain").removeClass("btn-success");
+							// remove the checkmark
 							$("#allowDomain").text("Allow Ads on Domain");
-							if (blocking) {
+							// if we're blocking and the allowpage button isn't clicked
+							if (blocking && !$("#allowPage").hasClass("btn-success")) {
+								// add the spinner because we know we're really blocking
 								$("#blockedLabel").html("<i class=\"fa fa-spinner fa-pulse fa-fw\"></i>Total Ads Blocked: <span id=\"totalBlocked\"></span>");
 							}
+							// if the allowpage is currently disabled
 							if($("#allowPage").hasClass("disabled")) {
+								// enable it
 								$("#allowPage").removeClass("disabled");
 							}
+							// reload the tab
 							chrome.tabs.reload();
-						} else {
-							console.log("adding " + tab[0].url + " to list");
+						} else { // if the domain isn't allowed
+							// now add it so that it is
 							allowDomainList.push(tab[0].url);
+							// update the domain list in storage and send it to the backend
 							chrome.storage.local.set({"allowDomainList": allowDomainList });
 							chrome.runtime.sendMessage({"allowDomainList": allowDomainList });
+							// make the domain button green
 							$("#allowDomain").addClass("btn-success");
+							// add a checkmark
 							$("#allowDomain").html("<i class=\"fa fa-check\" aria-hidden=\"true\"></i> Allow Ads on Domain");
+							// remove the spinner
 							$("#blockedLabel").html("Total Ads Blocked: <span id=\"totalBlocked\"></span>");
+							// make the allowpage button disabled
 							$("#allowPage").addClass("disabled");
 
+							// reload the page
 							chrome.tabs.reload();
-
 						}
 					}
 				});
-			} else {
-				var allowDomainList = [];
-
-				chrome.tabs.query({"active": true}, function (tab) {
-					if(tab[0].url.substring(0,9) !== "chrome://") {
-						var isCurrAllowed = false;
-						var allowedIndex = -1;
-						for (url in allowDomainList) {
-							console.log(allowDomainList[url] + " " + tab[0].url);
-							if (parseURI(allowDomainList[url]).hostname == parseURI(tab[0].url).hostname) {
-								isCurrAllowed = true;
-								allowedIndex = url;
-								break;
-							}
-						}
-
-						if (isCurrAllowed) {
-							allowDomainList[allowedIndex] = null;
-							chrome.storage.local.set({"allowDomainList": allowDomainList });
-							chrome.runtime.sendMessage({"allowDomainList": allowDomainList });
-							$("#allowDomain").removeClass("btn-success");
-							$("#allowDomain").text("Allow Ads on Domain");
-							if (blocking) {
-								$("#blockedLabel").html("<i class=\"fa fa-spinner fa-pulse fa-fw\"></i>Total Ads Blocked: <span id=\"totalBlocked\"></span>");
-							}
-							if($("#allowPage").hasClass("disabled")) {
-								$("#allowPage").removeClass("disabled");
-							}
-							chrome.tabs.reload();
-						} else {
-							console.log("adding " + tab[0].url + " to list");
-							allowDomainList.push(tab[0].url);
-							chrome.storage.local.set({"allowDomainList": allowDomainList });
-							chrome.runtime.sendMessage({"allowDomainList": allowDomainList });
-							$("#allowDomain").addClass("btn-success");
-							$("#allowDomain").html("<i class=\"fa fa-check\" aria-hidden=\"true\"></i> Allow Ads on Domain");
-							$("#blockedLabel").html("Total Ads Blocked: <span id=\"totalBlocked\"></span>");
-							$("#allowPage").addClass("disabled");
-
-							chrome.tabs.reload();
-
-						}
-						console.log(allowDomainList);
-					}
-				});
-			}
 		});
 	});
 

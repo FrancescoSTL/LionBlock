@@ -13,10 +13,8 @@ var blocking = false;
 var allowUrlList = [];
 var allowDomainList = [];
 
-// NOTE: in isAd in SiteSonar HOST is the url in which all the ads are being loaded into and ORIGIN is the url from where the ad is being triggered. Example, the javascript file that generates the request.
 
 parseJSON();
-//parseDisconnectEntity();
 
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
@@ -52,11 +50,8 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
     var assetAdHost = canonicalizeHost(parseURI(details.url).hostname);
 
     if (isAd(details)) {
-      //console.log("we are blocking " + details.url)
       areWeCancelling = true;
       adsBlocked += 1; // update total ads blocked
-      //console.log("Yo we be blockin " + assetAdHost);
-      //console.log(details);
       chrome.storage.local.set({"adCount": adsBlocked });
     }
 
@@ -73,19 +68,11 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
 
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
   currentTabURLs[tabId] = tab.url;
-  /*console.log("------------------");
-  for(var tabnum in currentTabURLs) {
-    console.log(currentTabURLs[tabnum]);
-  }*/
 });
 
 chrome.tabs.onReplaced.addListener(function (addedTabId, removedTabId) {
   chrome.tabs.get(addedTabId, function (tab) {
     currentTabURLs[addedTabId] = tab.url;
-    /*console.log("------------------");
-    for(var tabnum in currentTabURLs) {
-      console.log(currentTabURLs[tabnum]);
-    }*/
   });
 });
 
@@ -110,33 +97,17 @@ function isAd(details) {
   if (details.tabId == -1 || details.type == "main_frame") {
     return false;
   }
-
-  
       // http://www.easybib.com
-      //console.log(currentTabURLs[details.tabId]);
       currentTabUrl = currentTabURLs[details.tabId];
-
-      /* 
-      TODO: We need to first check the actual website we are on (which we get from chrome.tabs). Then, check if this host is a resource of an entity. If it is, we check if the origin of the request is part of this entity's resources. If it is, we should not block them. On the contrary, blocking heeaders should happen.
-      */
-      //console.log(url+"1");
-      //console.log(parseURI(url)+"2");
-      //console.log(anonicalizeHost(parseURI(url))+"3");
-      //console.log(anonicalizeHost(parseURI(url).hostname)+"4");
 
       // the site who is making the request
       var requestHost = canonicalizeHost(parseURI(url).hostname);
 
       // this is the page we are on 
-      //var pageHost = canonicalizeHost(parseURI(currentTabUrl).hostname);
       var pageHost = canonicalizeHost(parseURI(currentTabUrl).hostname);
-
-      
-      //Fixed - Boris
       
       for (urlD in allowUrlList) {
         if (allowUrlList[urlD] == currentTabUrl) {
-          console.log("STOPPING BLOCKING FOR PAGE " + currentTabUrl);
           return false;
         }
       }
@@ -144,11 +115,9 @@ function isAd(details) {
       for (urlD in allowDomainList) {
         if (allowDomainList[urlD] !== null)
           if (canonicalizeHost(parseURI(allowDomainList[urlD]).hostname) == pageHost) {
-            console.log("STOPPING BLOCKING FOR DOMAIN " + pageHost);
             return false;
           }
       }
-
 
       // facebook.com can request facebook.com... We want 3rd party requests
       if (requestHost !== pageHost) {
@@ -163,7 +132,6 @@ function isAd(details) {
             requestIsEntityResource = entity.resources.indexOf(host) > -1;
             // if found, just stop looping
             if (requestIsEntityResource) {
-              //console.log("our request host is a resource for the entity " + entityName + " for " + requestHost + " with page host " + pageHost);
               break;
             }
           }
@@ -173,7 +141,6 @@ function isAd(details) {
             pageIsEntityProperty = entity.properties.indexOf(origin) > -1;
             // if found, just stop looping
             if (pageIsEntityProperty) {
-              //console.log("our page host is a property for the entity " + entityName + " for " + pageHost + " with request host " + requestHost);
               break;
             }
           }
@@ -186,22 +153,14 @@ function isAd(details) {
 
         // if url is something like ads.click.com then you would get all the hosts.. click.com
         var getHostAd = allHosts(parseURI(url).hostname);
-        //console.log("Before "+parseURI(url).hostname);
-        //console.log("After "+ getHostAd );
-
-        /*if (whitelistSet.has(getHostAd)) {
-          //return false;
-        }*/
 
         for (var host in getHostAd) {
           if (blocklistSet.has(getHostAd[host])) {
-            //console.log(getHostAd[host] + " is an ad");
             return true;
           }
         }
       }
 
-      //console.log(parseURI(url).hostname + " is not an ad");
       return false; 
 }
 
@@ -217,7 +176,7 @@ function parseURI(url) {
     search: match[6],
     hash: match[7]
   }
-} // end parse url
+}
 
 
 /*
@@ -226,16 +185,6 @@ function parseURI(url) {
  * parses the disconnect list and eliminates unnecessary categories
  */
 function parseJSON() {
-
-  console.log("running")
-
-  //delete disconnectJSON.categories['Content'];
-  //delete disconnectJSON.categories['Disconnect'];
-  //delete disconnectJSON.categories['Analytics'];
-  //delete disconnectJSON.categories['Social'];
-  //delete disconnectJSON.categories['Legacy Disconnect']
-  //delete disconnectJSON.categories['Legacy Content']
-  // parse our disconnect JSON into a set where we only include the hostname and subdomain urls
   for (var category in disconnectJSON.categories) {
     //  Advertising, Content ,Analytics, Social, Disconnect
     if (category != "Content") {
@@ -254,16 +203,4 @@ function parseJSON() {
       }
     }
   }
-} // end parse JSON
-
-/*
-function parseDisconnectEntity(){
-  for(var network in disconnectEntitylist) {
-     for(var type in disconnectEntitylist[network]) {
-        for(var resources in disconnectEntitylist[network][type]) {
-          whitelistSet.add(disconnectEntitylist[network][type][resources]);
-        }
-    }
-  }
-}
-*/
+} 
