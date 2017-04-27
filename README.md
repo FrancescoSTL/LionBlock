@@ -25,8 +25,8 @@ If you have been working on the blocker.js, you **NEED** to run `npm run bundle`
 To open the developer tools for the extension you need to go to [chrome://extensions/](chrome://extensions) and click on Inspected views: **_background_ page** 
 
 ## Team
-* [Andres Rodriguez](https://www.andresrodh.com)
+* [Andres Rodriguez](andresrodh.com)
 * Boris Pallares
-* [Francesco Polizzi](https://www.francesco.tech)
+* [Francesco Polizzi](francesco.tech)
 * Marco De Lucca
 * Nicholas Haghighi
