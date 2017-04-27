@@ -4,7 +4,11 @@
 
 // once the dom content has finished loading, lets start interacting with it
 document.addEventListener('DOMContentLoaded', function () {
+	// control variable for the blocking message
 	var blocking;
+	// default status of the checkmarks on the buttons should be hidden unless the resource is allowed
+	$("#domainCheck").hide();
+	$("#pageCheck").hide();
 
 	// get the isBlocking flag from storage to determine our app state
 	chrome.storage.local.get('isBlocking', function (result) {
@@ -112,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						// then make the button green
 						$("#allowPage").addClass("btn-success");
 						// add the checkmark to it
-						$("#allowPage").html("<i class=\"fa fa-check\" aria-hidden=\"true\"></i> Allow Ads on Page");
+						$("#pageCheck").show();
 						// and remove the spinner
 						$("#spinner").hide();
 					}
@@ -142,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function () {
 								// make the allow domain button green
 								$("#allowDomain").addClass("btn-success");
 								// add a checkmark to it
-								$("#allowDomain").html("<i class=\"fa fa-check\" aria-hidden=\"true\"></i> Allow Ads on Domain");
+								$("#domCheck").show();
 								// remove the spinner
 								$("#spinner").hide();
 								// disable the allowpage button
@@ -204,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						// make the button white again
 						$("#allowPage").removeClass("btn-success");
 						// remove the checkmark
-						$("#allowPage").text("Allow Ads on Page");
+						$("#pageCheck").hide();
 						// if we're blocking
 						if (blocking) {
 							// add the spinner
@@ -225,7 +229,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						// make the button green
 						$("#allowPage").addClass("btn-success");
 						// add a checkmark
-						$("#allowPage").html("<i class=\"fa fa-check\" aria-hidden=\"true\"></i> Allow Ads on Page");
+						$("#pageCheck").show();
 						// remove the spinner
 						$("#spinner").hide();
 						// and reload the page
@@ -298,7 +302,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						// make the button white again
 						$("#allowDomain").removeClass("btn-success");
 						// remove the checkmark
-						$("#allowDomain").text("Allow Ads on Domain");
+						$("#domainCheck").hide();
 						// if we're blocking and the allowpage button isn't clicked
 						if (blocking && !$("#allowPage").hasClass("btn-success")) {
 							// add the spinner because we know we're really blocking
@@ -324,7 +328,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						// make the domain button green
 						$("#allowDomain").addClass("btn-success");
 						// add a checkmark
-						$("#allowDomain").html("<i class=\"fa fa-check\" aria-hidden=\"true\"></i> Allow Ads on Domain");
+						$("#domainCheck").show();
 						// remove the spinner
 						$("#spinner").hide();
 						// make the allowpage button disabled
