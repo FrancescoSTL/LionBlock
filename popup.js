@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			chrome.tabs.query({
 				"active": true
 			}, function (tab) {
-				// so long as we're not on a privliged page
+				// so long as we're not on a priviliged page
 				if (tab[0].url.substring(0, 8) !== "chrome://")
 					// run through every page in our allow domain list
 					for (url in allowList) {
