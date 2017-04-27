@@ -1,17 +1,7 @@
 # LionBlock
 An Adblock for Google Chrome developed as a senior CS capstone project for team AdBuster at Lindenwood University.
 
-## Team
-* Francesco Polizzi
-* Boris Pallares
-* Marco De Lucca
-* Nicholas Haghighi
-* Andres Rodriguez
-
-
-## Installing LionBlock
-
-### For Chrome
+### Developing LionBlock on Chrome
 
 Clone the repository by running:
 ```
@@ -19,28 +9,24 @@ git clone https://github.com/FrancescoSTL/LionBlock.git
 ```
 Download and install [Node.js](https://nodejs.org/en/download/)
 
-Once you've cloned the repo and installed Node.js, you can start LionBlock by running:
+We use Browserify which allows us to bundle our code and require modules. To bundle LionBlock, run:
 
 1. `npm install`
 2. `npm run bundle`
 
-## To debug
+Go to [chrome://extensions/](chrome://extensions) and enable Developer mode. Then, click on the **Load unpacked extension** and select the LionBlock folder.
 
-Go to chrome://extensions/ and enable Developer mode.
+##### DEVELOPER'S NOTE
+If you have been working on the blocker.js, you **NEED** to run `npm run bundle` so those changes are effective. Also, if the extension is not working as you would expect -- given that your code is correct -- then remove the extension and add it back again.
 
-Click on inspect views
+##### Congratulations! Now you have LionBlock in your browser 🎉
 
-# Todo
+### Debugging the extension
+To open the developer tools for the extension you need to go to [chrome://extensions/](chrome://extensions) and click on Inspected views: **_background_ page** 
 
-## Backend
-
-    1. Main function that start the listener for HTTP headers.
-    2. Function that parses disconnect JSON file.
-    3. Function isBlackListed.
-    4. Function that parses URLs.
-
-## FrontEnd
-
-	1. Document code.
-	2. Finish color palettes and template.
-	3. Get the UI components to interact with the back-end.
+## Team
+* [Andres Rodriguez](https://andresrodh.com)
+* Boris Pallares
+* [Francesco Polizzi](https://francesco.tech)
+* Marco De Lucca
+* Nicholas Haghighi
