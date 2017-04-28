@@ -2,7 +2,7 @@
   "manifest_version": 2,
 
   "name": "LionBlock",
-  "description": "AdBusters first extension",
+  "description": "Adblocking simplified: A low-profile, independent ad blocker for the masses.",
   "version": "1.0",
   "background": {
     "scripts": ["js/blocker.bundle.js"]
