@@ -18357,24 +18357,21 @@ module.exports={
 },{}],3:[function(require,module,exports){
 // Set of the hostnames that are going to be blocked
 var adsBlocked = 0; // ads blocked counter
-var blocklistSet = new Set();
-var whitelistSet = new Set();
-var currentTabURLs = {};
-const disconnectJSON = require('../data/disconnect.json');
-const disconnectEntitylist = require('../data/disconnectEntitylist.json');
+var blocklistSet = new Set(); // set that holds our block list
+var currentTabURLs = {}; // url on tabs currently opened
+const disconnectJSON = require('../data/disconnect.json');  // require disconnect.json
+const disconnectEntitylist = require('../data/disconnectEntitylist.json');  // require entity list
 var {
   allHosts,
   canonicalizeHost
-} = require('../js/canonicalize.js');
-var blocking = false;
-var allowUrlList = [];
-var allowDomainList = [];
+} = require('../js/canonicalize.js');  // require aditional modules
+var blocking = false;  // set default blocker behavior
+var allowUrlList = [];  // initialize array of allowed urls
+var allowDomainList = []; // initialize array of allowed domains
 
-// NOTE: in isAd in SiteSonar HOST is the url in which all the ads are being loaded into and ORIGIN is the url from where the ad is being triggered. Example, the javascript file that generates the request.
-
+// parse our disconnect.json object
 parseJSON();
-//parseDisconnectEntity();
-
+// conection with the front end of the extension
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
     // if we've got a blocking command
@@ -18382,189 +18379,167 @@ chrome.runtime.onMessage.addListener(
       // note that we'd like to toggle blocking
       if (blocking) {
         blocking = false;
-        console.log("Ad blocking disabled");
       } else {
         blocking = true;
-        console.log("Ad blocking enabled");
       }
     } else if (typeof request.blockingCheck !== 'undefined') {
+      // send blocking status back to the front end
       sendResponse({
         "isBlocking": blocking
       });
-      console.log("sending response" + blocking);
     } else if (typeof request.allowDomainList !== 'undefined') {
-      
+      // get the allowDomainList from the front end
       allowDomainList = request.allowDomainList;
     } else if (typeof request.allowUrlList !== 'undefined') {
+      // get the allowUrlList from the front end
       allowUrlList = request.allowUrlList;
-    } 
+    }
   }
 );
 
+// intercept requests from all  urls
 chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
-  // do the blocking
-
   if (blocking) {
     var areWeCancelling = false; // boolean checking blocking status
-    var assetAdHost = canonicalizeHost(parseURI(details.url).hostname);
 
     if (isAd(details)) {
-      //console.log("we are blocking " + details.url)
       areWeCancelling = true;
       adsBlocked += 1; // update total ads blocked
-      //console.log("Yo we be blockin " + assetAdHost);
-      //console.log(details);
-      chrome.storage.local.set({"adCount": adsBlocked });
+      chrome.storage.local.set({
+        "adCount": adsBlocked
+      });
     }
 
+    // return state of the blocking
     return {
       cancel: areWeCancelling
     };
   }
-
+  // we do not block at all
   return;
 }, {
   urls: ["<all_urls>"]
 }, ["blocking", "requestHeaders"]);
 
-
+// if the url of a tab has changed, update the tab's information in our tabs set
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
   currentTabURLs[tabId] = tab.url;
-  /*console.log("------------------");
-  for(var tabnum in currentTabURLs) {
-    console.log(currentTabURLs[tabnum]);
-  }*/
 });
-
+// if a tab has been replaced, add that id to our tabs set
 chrome.tabs.onReplaced.addListener(function (addedTabId, removedTabId) {
   chrome.tabs.get(addedTabId, function (tab) {
     currentTabURLs[addedTabId] = tab.url;
-    /*console.log("------------------");
-    for(var tabnum in currentTabURLs) {
-      console.log(currentTabURLs[tabnum]);
-    }*/
   });
 });
-
+// if a tab has been removed, nullify it on our tabs set
 chrome.tabs.onRemoved.addListener(function (tabId, removeInfo) {
   currentTabURLs[tabId] = null;
 });
 
-/*
- * By Francesco
- *
- * Edited by Boris Pallres
+/**
+ * @function isAd
  * 
- * Edited by Andres Rodriguez 04/05/2017
+ * @param {object} details from the header that has been intercepted
  * 
- * @returns true if it is an ad.
+ * @description describes if the intercepted request is an ad or not
+ * 
+ * @return {boolean} true if its an ad, false otherwise
  */
 function isAd(details) {
+  // url from the ad
   var url = details.url;
+  // url from the current tab
   var currentTabUrl;
 
   // if the tabid is -1, it isn't from a tab (from a browser) so we know it isn't an ad
   if (details.tabId == -1 || details.type == "main_frame") {
     return false;
   }
+  // http://www.easybib.com
+  currentTabUrl = currentTabURLs[details.tabId];
 
-  
-      // http://www.easybib.com
-      //console.log(currentTabURLs[details.tabId]);
-      currentTabUrl = currentTabURLs[details.tabId];
+  // the site who is making the request
+  var requestHost = canonicalizeHost(parseURI(url).hostname);
 
-      /* 
-      TODO: We need to first check the actual website we are on (which we get from chrome.tabs). Then, check if this host is a resource of an entity. If it is, we check if the origin of the request is part of this entity's resources. If it is, we should not block them. On the contrary, blocking heeaders should happen.
-      */
-      //console.log(url+"1");
-      //console.log(parseURI(url)+"2");
-      //console.log(anonicalizeHost(parseURI(url))+"3");
-      //console.log(anonicalizeHost(parseURI(url).hostname)+"4");
+  // this is the page we are on 
+  var pageHost = canonicalizeHost(parseURI(currentTabUrl).hostname);
 
-      // the site who is making the request
-      var requestHost = canonicalizeHost(parseURI(url).hostname);
+  // if the url is in our url excemption list, then we do not block it
+  for (urlD in allowUrlList) {
+    if (allowUrlList[urlD] == currentTabUrl) {
+      return false;
+    }
+  }
+  // if the host of the current url is in our domain excemption list, then we do not block it
+  for (urlD in allowDomainList) {
+    if (allowDomainList[urlD] !== null)
+      if (canonicalizeHost(parseURI(allowDomainList[urlD]).hostname) == pageHost) {
+        return false;
+      }
+  }
 
-      // this is the page we are on 
-      //var pageHost = canonicalizeHost(parseURI(currentTabUrl).hostname);
-      var pageHost = canonicalizeHost(parseURI(currentTabUrl).hostname);
+  // facebook.com can request facebook.com... We want 3rd party requests
+  if (requestHost !== pageHost) {
+    // loop through the disconnectEntityList 
+    for (var entityName in disconnectEntitylist) {
+      // get this entity name from the disconnectEntitylist
+      // Facebook, Google, Twitter
+      var entity = disconnectEntitylist[entityName];
+      // control variable: page is a resource for the entity
+      var pageIsEntityResource;
+      // control variable: request is a property of the entity 
+      var requestIsEntityProperty;
 
-      
-      //Fixed - Boris
-      
-      for (urlD in allowUrlList) {
-        if (allowUrlList[urlD] == currentTabUrl) {
-          console.log("STOPPING BLOCKING FOR PAGE " + currentTabUrl);
-          return false;
+      // loop through all the entity resources and check if request host is an accepted resource for the entity
+      for (var host of allHosts(requestHost)) {
+        requestIsEntityResource = entity.resources.indexOf(host) > -1;
+        // if found, just stop looping
+        if (requestIsEntityResource) {
+          break;
         }
       }
 
-      for (urlD in allowDomainList) {
-        if (allowDomainList[urlD] !== null)
-          if (canonicalizeHost(parseURI(allowDomainList[urlD]).hostname) == pageHost) {
-            console.log("STOPPING BLOCKING FOR DOMAIN " + pageHost);
-            return false;
-          }
-      }
-
-
-      // facebook.com can request facebook.com... We want 3rd party requests
-      if (requestHost !== pageHost) {
-        // loop through the disconnectEntityList 
-        for (var entityName in disconnectEntitylist) {
-          var entity = disconnectEntitylist[entityName];
-          var pageIsEntityResource;
-          var requestIsEntityProperty;
-
-          // loop through all the entity resources and check if request host is an accepted resource for the entity
-          for (var host of allHosts(requestHost)) {
-            requestIsEntityResource = entity.resources.indexOf(host) > -1;
-            // if found, just stop looping
-            if (requestIsEntityResource) {
-              //console.log("our request host is a resource for the entity " + entityName + " for " + requestHost + " with page host " + pageHost);
-              break;
-            }
-          }
-
-          // loop through all the properties and check if it is a property of the entity
-          for (var origin of allHosts(pageHost)) {
-            pageIsEntityProperty = entity.properties.indexOf(origin) > -1;
-            // if found, just stop looping
-            if (pageIsEntityProperty) {
-              //console.log("our page host is a property for the entity " + entityName + " for " + pageHost + " with request host " + requestHost);
-              break;
-            }
-          }
-
-          // if our origin is a property and host is a resource of the entity, return false
-          if (pageIsEntityProperty && requestIsEntityResource) {
-            return false;
-          }
-        }
-
-        // if url is something like ads.click.com then you would get all the hosts.. click.com
-        var getHostAd = allHosts(parseURI(url).hostname);
-        //console.log("Before "+parseURI(url).hostname);
-        //console.log("After "+ getHostAd );
-
-        /*if (whitelistSet.has(getHostAd)) {
-          //return false;
-        }*/
-
-        for (var host in getHostAd) {
-          if (blocklistSet.has(getHostAd[host])) {
-            //console.log(getHostAd[host] + " is an ad");
-            return true;
-          }
+      // loop through all the properties and check if it is a property of the entity
+      for (var origin of allHosts(pageHost)) {
+        pageIsEntityProperty = entity.properties.indexOf(origin) > -1;
+        // if found, just stop looping
+        if (pageIsEntityProperty) {
+          break;
         }
       }
 
-      //console.log(parseURI(url).hostname + " is not an ad");
-      return false; 
+      // if our origin is a property and host is a resource of the entity, it is not an ad
+      if (pageIsEntityProperty && requestIsEntityResource) {
+        return false;
+      }
+    }
+
+    // if url is something like ads.click.com then you would get all the hosts.. click.com
+    var getHostAd = allHosts(parseURI(url).hostname);
+
+    // if this host is part of our blocklist set we block it
+    for (var host in getHostAd) {
+      if (blocklistSet.has(getHostAd[host])) {
+        return true;
+      }
+    }
+  }
+  // if it is not a third party request, we do not block it
+  return false;
 }
 
+/**
+ * @function parseURI
+ * 
+ * @param {String} url is the url to parse
+ * 
+ * @description Parses a URL into an object that describes said URL
+ * 
+ * @return {object} protocol | host | hostname | port | pathname | search | hash
+ */
 function parseURI(url) {
   var match = url.match(/^((https|http)?\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)(\/[^?#]*)(\?[^#]*|)(#.*|)$/);
-  
+
   return match && {
     protocol: match[1],
     host: match[2],
@@ -18574,25 +18549,14 @@ function parseURI(url) {
     search: match[6],
     hash: match[7]
   }
-} // end parse url
+}
 
-
-/*
- * By Andres
+/**
+ * @function parseJSON
  * 
- * parses the disconnect list and eliminates unnecessary categories
+ * @description parses disconnect.json and eliminates unnecessary categories
  */
 function parseJSON() {
-
-  console.log("running")
-
-  //delete disconnectJSON.categories['Content'];
-  //delete disconnectJSON.categories['Disconnect'];
-  //delete disconnectJSON.categories['Analytics'];
-  //delete disconnectJSON.categories['Social'];
-  //delete disconnectJSON.categories['Legacy Disconnect']
-  //delete disconnectJSON.categories['Legacy Content']
-  // parse our disconnect JSON into a set where we only include the hostname and subdomain urls
   for (var category in disconnectJSON.categories) {
     //  Advertising, Content ,Analytics, Social, Disconnect
     if (category != "Content") {
@@ -18603,7 +18567,6 @@ function parseJSON() {
           for (var subDomain in disconnectJSON.categories[category][network][hostname]) {
             // gets the subdomain as http://2leep.com/ , http://33across.com/ , http://www.4info.com/
             for (var entitySubDomain in disconnectJSON.categories[category][network][hostname][subDomain]) {
-              // gets wierd random numbers
               blocklistSet.add(disconnectJSON.categories[category][network][hostname][subDomain][entitySubDomain]);
             }
           }
@@ -18611,19 +18574,7 @@ function parseJSON() {
       }
     }
   }
-} // end parse JSON
-
-/*
-function parseDisconnectEntity(){
-  for(var network in disconnectEntitylist) {
-     for(var type in disconnectEntitylist[network]) {
-        for(var resources in disconnectEntitylist[network][type]) {
-          whitelistSet.add(disconnectEntitylist[network][type][resources]);
-        }
-    }
-  }
 }
-*/
 },{"../data/disconnect.json":1,"../data/disconnectEntitylist.json":2,"../js/canonicalize.js":4}],4:[function(require,module,exports){
 var ip4DecimalPattern = '^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).){3}(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))$'
 var ip4HexPattern = '^(?:(?:0x[0-9a-f]{1,2}).){3}(?:0x[0-9a-f]{1,2})$'
