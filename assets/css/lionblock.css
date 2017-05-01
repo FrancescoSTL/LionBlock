@@ -1,3 +1,7 @@
+/*
+* === DEFAULT ELEMENT STYLING ===
+*/
+
 body {
   font-family: 'Roboto', sans-serif;
   font-size: 100%;
@@ -7,17 +11,17 @@ body {
   background-color: #fafafa;
 }
 
-.fa {
-  font-size: 14px;
-  margin-right: 4px;
-
+h1 {
+  color: #efefef;
 }
 
-#status {
-  /* avoid an excessively wide status text */
-  white-space: pre;
-  text-overflow: ellipsis;
-  overflow: hidden;
+h2, h4, h5, h6 {
+  color: #8d8d8d;
+}
+
+p {
+  font-size: 11px;
+  color: #616161;
 }
 
 hr {
@@ -35,30 +39,41 @@ li {
   list-style-type: none;
 }
 
+a, a:hover {
+  color: #e0e0e0;
+  text-decoration: none !important;
+}
+
+h2 {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+h3 {
+  font-size: 14px;
+  margin-left: 15px;
+}
+
+.fa {
+  /* Font Awesome styling */
+  font-size: 14px;
+  margin-right: 4px;
+
+}
+
+#status {
+  /* Avoid an excessively wide status text */
+  white-space: pre;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 .caret-right {
   border-bottom: 4px solid transparent;
 }
 
-h1 {
-  color: #efefef;
-}
-
-h2,
-h4,
-h5,
-h6 {
-  color: #8d8d8d;
-}
-
-p {
-  font-size: 11px;
-  color: #616161;
-}
-
-
-/* This is for the Statistics Label */
-
 .stats {
+  /* Statistic title */
   color: #808080;
   font-weight: bold;
 }
@@ -103,24 +118,12 @@ p {
   padding-bottom: 3px;
 }
 
-h2 {
-  font-size: 18px;
-  font-weight: bold;
-}
-
-h3 {
-  font-size: 14px;
-  margin-left: 15px;
-}
-
 .btn-group-vertical {
   display: block;
   margin: 10px;
 }
 
-.toggle.ios,
-.toggle-on.ios,
-.toggle-off.ios {
+.toggle.ios, .toggle-on.ios, .toggle-off.ios {
   border-radius: 20px;
 }
 
@@ -165,8 +168,9 @@ h3 {
   -moz-transition: height 0.25s ease;
   transition: height 0.25s ease;
 }
+
 .teaminfo-container.open {
-  height: 115px;
+  height: 162px;
 }
 
 .footer {
@@ -201,12 +205,6 @@ h3 {
   -moz-transition: all 0.3s linear;
   -webkit-transition: all 0.3s linear;
   transition: all 0.3s linear;
-}
-
-a,
-a:hover {
-  color: #e0e0e0;
-  text-decoration: none !important;
 }
 
 .flip.down {
@@ -271,4 +269,8 @@ a:hover {
 
 .btn-pressed {
   background-color: grey;
+}
+
+.email {
+  color: #373737;
 }

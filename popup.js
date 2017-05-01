@@ -344,19 +344,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	// closes the options dropdown and moves to the info section of the extension
 	$(".left").on('click', function (event, handleCarousel) {
+		// if the advanced options container is open
 		if ($('.option-container').hasClass('open')) {
 			$('.option-container').toggleClass('open');
 			$("#click-tag").toggleClass('down');
 		}
+		// moves from main scene to information scene located to the "left"
 		$("#sceneSlider").carousel("prev");
 	});
 
 	// closes the team info dropdown and moves back to the main window of the extension
 	$(".right").on('click', function (event, handleCarousel) {
+		// if the team information container is open
 		if ($('.teaminfo-container').hasClass('open')) {
 			$('.teaminfo-container').toggleClass('open');
 			$("#click-tag2").toggleClass('down');
 		}
+		// moves from information scene to the main scene located to the "right"
 		$("#sceneSlider").carousel("next");
 	});
 
