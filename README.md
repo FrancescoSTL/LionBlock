@@ -30,3 +30,5 @@ To open the developer tools for the extension you need to go to [chrome://extens
 * [Francesco Polizzi](http://www.francesco.tech)
 * Marco De Lucca
 * Nicholas Haghighi
+
+For more information you can contact the team at **contact.lionblock@gmail.com**
